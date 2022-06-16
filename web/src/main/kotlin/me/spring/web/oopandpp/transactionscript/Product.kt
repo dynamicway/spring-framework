@@ -1,4 +1,4 @@
-package me.spring.web.oopandpp.transactionscript.order
+package me.spring.web.oopandpp.transactionscript
 
 class Product(
     private val id: Long,

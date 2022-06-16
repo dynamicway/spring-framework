@@ -1,4 +1,4 @@
-package me.spring.web.oopandpp.transactionscript.order
+package me.spring.web.oopandpp.transactionscript
 
 class DiscountStrategy(
     private val id: Long,
