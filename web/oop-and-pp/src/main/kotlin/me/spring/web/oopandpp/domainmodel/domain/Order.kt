@@ -5,13 +5,17 @@ import java.time.LocalDateTime
 class Order(
     private val id: Long,
     private val product: Product,
-    private var fee: Int,
     private val sequenceOfProductOrdered: Long,
     private val orderTime: LocalDateTime
 ) {
 
-    fun discount(discountStrategies: List<DiscountStrategy>) {
-        fee -= discountStrategies.filter { it.isSatisfied(this) }
+    private var _fee: Int = product.fee
+    private var discountFee = 0
+    val fee
+        get() = _fee
+
+    fun applyDiscountFee(discountStrategies: List<DiscountStrategy>) {
+        discountFee = discountStrategies.filter { it.isSatisfied(this) }
             .maxOf { it.getDisCountFee(this) }
     }
 
