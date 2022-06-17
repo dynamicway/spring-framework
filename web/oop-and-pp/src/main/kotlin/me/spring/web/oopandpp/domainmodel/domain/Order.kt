@@ -18,6 +18,8 @@ class Order(
         get() = _sequenceOfProductOrdered
     val orderTime
         get() = _orderTime
+    val productId
+        get() = product.id
 
     fun applyDiscountFee(discountStrategies: List<DiscountStrategy>) {
         discountFee = discountStrategies.filter { it.isSatisfied(this) }
