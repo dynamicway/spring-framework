@@ -1,0 +1,34 @@
+plugins {
+    id "org.springframework.boot" version "2.7.0" apply false
+    id "io.spring.dependency-management" version "1.0.11.RELEASE" apply false
+    id "java-library"
+    id "org.jetbrains.kotlin.jvm" version "1.7.0" apply false
+    id "org.jetbrains.kotlin.plugin.spring" version "1.7.0" apply false
+}
+
+allprojects {
+    group = "me.spring"
+    java.sourceCompatibility = JavaVersion.VERSION_17
+    repositories { mavenCentral() }
+}
+
+subprojects {
+
+    apply plugin: "org.springframework.boot"
+    apply plugin: "io.spring.dependency-management"
+    apply plugin: "java-library"
+    apply plugin: "org.jetbrains.kotlin.jvm"
+    apply plugin: "org.jetbrains.kotlin.plugin.spring"
+
+    dependencies {
+        implementation("org.springframework.boot:spring-boot-starter-security")
+        implementation("org.springframework.boot:spring-boot-starter-web")
+        implementation("org.jetbrains.kotlin:kotlin-reflect")
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+        testImplementation("org.springframework.boot:spring-boot-starter-test")
+        testImplementation("org.springframework.security:spring-security-test")
+    }
+
+    test { useJUnitPlatform() }
+
+}
