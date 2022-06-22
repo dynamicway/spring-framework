@@ -1,0 +1,21 @@
+authentication:
+  oauth2:
+    clients:
+      kakao:
+        client-name: kakao
+        client-id: 56edd19efd6c111b6bebc18c63195d9c
+        client-secret: jm9q5yw0Gsno46LtKD0EJpkRzUwsX65u
+        user-info-url: kakaoUserInfoUrl
+        resource-server-id: kakaoResourceServerServerId
+        user-info-attributes:
+          profile: kakaoResourceServerProfile
+          email: kakaoResourceServerEmail
+      google:
+        client-name: google
+        client-id: google
+        client-secret: google-secret
+        user-info-url: googleUserInfoUrl
+        resource-server-id: googleResourceServerServerId
+        user-info-attributes:
+          profile: googleResourceServerProfile
+          email: googleResourceServerEmail
