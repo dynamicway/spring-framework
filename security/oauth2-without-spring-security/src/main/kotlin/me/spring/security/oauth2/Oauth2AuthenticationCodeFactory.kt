@@ -1,16 +1,9 @@
 package me.spring.security.oauth2
 
-import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
+import javax.servlet.ServletRequest
 
-@ConfigurationProperties(prefix = "authentication.oauth2")
-@ConstructorBinding
-class Oauth2AuthenticationCodeFactory(clients: Map<String, ResourceServer>) {
+interface Oauth2AuthenticationCodeFactory {
 
-    private val resourceServers: List<ResourceServer>
-
-    init {
-        resourceServers = clients.values.toList()
-    }
+    fun getOauth2AuthenticationCodeBy(servletRequest: ServletRequest): Oauth2AuthenticationCode
 
 }
