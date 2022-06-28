@@ -41,7 +41,6 @@ internal class DefaultOauth2AuthenticationCodeFactoryTest {
             )
         )
     )
-
     private val defaultOauth2AuthenticationCodeFactory = DefaultOauth2AuthenticationCodeFactory(
         clients
     )
@@ -50,11 +49,11 @@ internal class DefaultOauth2AuthenticationCodeFactoryTest {
     fun getOauth2AuthenticationCodeBy_return_oauth2AuthenticationCode_through_authenticationCode_redirected() {
         clients.forEach { client ->
             val servletRequest = MockHttpServletRequest("GET", "/auth/${client.key}")
-            val requestedAuthenticationCoded = "${client.key}AuthenticationCode"
-            servletRequest.addParameter("code", requestedAuthenticationCoded)
+            val requestedAuthenticationCode = "${client.key}AuthenticationCode"
+            servletRequest.addParameter("code", requestedAuthenticationCode)
             val authenticationCode = defaultOauth2AuthenticationCodeFactory.getOauth2AuthenticationCodeBy(servletRequest)
-            assertThat(authenticationCode.resourceServer).isEqualTo(client)
-            assertThat(authenticationCode.code).isEqualTo(requestedAuthenticationCoded)
+            assertThat(authenticationCode.resourceServer).isEqualTo(client.value)
+            assertThat(authenticationCode.code).isEqualTo(requestedAuthenticationCode)
         }
     }
 
