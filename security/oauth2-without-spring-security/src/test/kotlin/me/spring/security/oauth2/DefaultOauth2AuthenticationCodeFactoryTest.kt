@@ -1,6 +1,7 @@
 package me.spring.security.oauth2
 
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatCode
 import org.junit.jupiter.api.Test
 import org.springframework.mock.web.MockHttpServletRequest
 
@@ -55,6 +56,13 @@ internal class DefaultOauth2AuthenticationCodeFactoryTest {
             assertThat(authenticationCode.resourceServer).isEqualTo(client.value)
             assertThat(authenticationCode.code).isEqualTo(requestedAuthenticationCode)
         }
+    }
+
+    @Test
+    fun getOauth2AuthenticationCodyBy_throw_IllegalArgumentsException_when_not_supported_resource_server() {
+        assertThatCode { defaultOauth2AuthenticationCodeFactory.getOauth2AuthenticationCodeBy(MockHttpServletRequest("GET", "/auth/invalidResourceServer")) }
+                .isInstanceOf(IllegalArgumentException::class.java)
+                .hasMessage("not supported resource server")
     }
 
 }
