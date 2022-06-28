@@ -13,9 +13,9 @@ class DefaultOauth2AuthenticationCodeFactory(private val clients: HashMap<String
         val httpServletRequest = servletRequest as HttpServletRequest
         val resourceServerName = httpServletRequest.requestURI.substringAfterLast("auth/")
         val authenticationCode = httpServletRequest.getParameter("code")
-        // httpServletRequest 객체를 파싱하여 resourceServer 를 알아내고 그에 맞는 resourceServer 객체를 반환한다.
+        
         return Oauth2AuthenticationCode(
-            clients[resourceServerName]!!,
+            clients[resourceServerName] ?: throw IllegalArgumentException("not supported resource server"),
             authenticationCode
         )
     }
