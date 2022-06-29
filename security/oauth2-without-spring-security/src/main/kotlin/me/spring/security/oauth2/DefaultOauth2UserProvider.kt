@@ -17,7 +17,7 @@ class DefaultOauth2UserProvider(
                 .queryParams(accessTokenRequestParameters)
                 .build()
                 .toUri()
-        restTemplate.getForEntity(accessTokenRequestUri, Oauth2AccessTokenResponse::class.java)
+        restTemplate.getForEntity(accessTokenRequestUri, Oauth2AccessTokenResponse::class.java).body ?: throw IllegalStateException()
 
         return Oauth2User()
     }
