@@ -10,7 +10,7 @@ internal class DefaultOauth2AuthenticationCodeFactoryTest {
 
     private val clients = hashMapOf(
         "google" to getResourceServerDummy(
-            clientName = "googleClientName",
+            clientName = "google",
             clientId = "googleClientId",
             clientSecret = "googleClientSecret",
             resourceServerId = "googleResourceServerId",
@@ -24,7 +24,7 @@ internal class DefaultOauth2AuthenticationCodeFactoryTest {
             )
         ),
         "naver" to getResourceServerDummy(
-            clientName = "naverClientName",
+            clientName = "naver",
             clientId = "naverClientId",
             clientSecret = "naverClientSecret",
             resourceServerId = "naverResourceServerId",
@@ -38,7 +38,7 @@ internal class DefaultOauth2AuthenticationCodeFactoryTest {
             )
         ),
         "kakao" to getResourceServerDummy(
-            clientName = "kakaoClientName",
+            clientName = "kakao",
             clientId = "kakaoClientId",
             clientSecret = "kakaoClientSecret",
             resourceServerId = "kakaoResourceServerId",
