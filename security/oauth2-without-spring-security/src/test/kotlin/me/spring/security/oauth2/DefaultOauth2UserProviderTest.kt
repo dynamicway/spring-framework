@@ -1,8 +1,10 @@
 package me.spring.security.oauth2
 
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatCode
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.http.ResponseEntity
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.util.UriComponentsBuilder
 
@@ -31,6 +33,15 @@ internal class DefaultOauth2UserProviderTest {
                 .toUri()
         assertThat(spyRestTemplate.getForEntityArgumentsUrl).isEqualTo(accessTokenRequestUri)
         assertThat(spyRestTemplate.getForEntityArgumentsResponseType).isEqualTo(Oauth2AccessTokenResponse::class.java)
+    }
+
+    @Test
+    fun getOauth2User_throw_IllegalStateException_when_get_accessToken_returns_null() {
+        spyRestTemplate.getForEntityResult = ResponseEntity.noContent()
+                .build()
+
+        assertThatCode { defaultOauth2UserProvider.getOauth2User(getOauth2AuthenticationCodeDummy()) }
+                .isInstanceOf(IllegalStateException::class.java)
     }
 
 }
