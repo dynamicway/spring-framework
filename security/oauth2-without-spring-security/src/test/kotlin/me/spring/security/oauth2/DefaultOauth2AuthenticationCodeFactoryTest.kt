@@ -3,41 +3,51 @@ package me.spring.security.oauth2
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatCode
 import org.junit.jupiter.api.Test
+import org.springframework.http.HttpMethod
 import org.springframework.mock.web.MockHttpServletRequest
 
 internal class DefaultOauth2AuthenticationCodeFactoryTest {
 
     private val clients = hashMapOf(
-        "google" to ResourceServer(
-            clientName = "google",
+        "google" to getResourceServerDummy(
+            clientName = "googleClientName",
             clientId = "googleClientId",
             clientSecret = "googleClientSecret",
-            userInfoUrl = "googleUserInfoUrl",
             resourceServerId = "googleResourceServerId",
+            accessTokenUri = "googleAccessTokenUri",
+            accessTokenRequestParameters = mapOf("googleAccessTokenParameter" to "googleAccessTokenParameter"),
+            userInfoHttpMethod = HttpMethod.GET,
+            userInfoUri = "google_userInfoUri",
             userInfoAttributes = ResourceServer.UserInfoAttributes(
-                profile = "googleProfile",
+                profileImage = "googleProfile",
                 email = "googleEmail"
             )
         ),
-        "naver" to ResourceServer(
-            clientName = "naver",
+        "naver" to getResourceServerDummy(
+            clientName = "naverClientName",
             clientId = "naverClientId",
             clientSecret = "naverClientSecret",
-            userInfoUrl = "naverUserInfoUrl",
             resourceServerId = "naverResourceServerId",
+            accessTokenUri = "naverAccessTokenUri",
+            accessTokenRequestParameters = mapOf("naverAccessTokenParameter" to "naverAccessTokenParameter"),
+            userInfoHttpMethod = HttpMethod.GET,
+            userInfoUri = "naver_userInfoUri",
             userInfoAttributes = ResourceServer.UserInfoAttributes(
-                profile = "naverProfile",
+                profileImage = "naverProfile",
                 email = "naverEmail"
             )
         ),
-        "kakao" to ResourceServer(
-            clientName = "kakao",
+        "kakao" to getResourceServerDummy(
+            clientName = "kakaoClientName",
             clientId = "kakaoClientId",
             clientSecret = "kakaoClientSecret",
-            userInfoUrl = "kakaoUserInfoUrl",
             resourceServerId = "kakaoResourceServerId",
+            accessTokenUri = "kakaoAccessTokenUri",
+            accessTokenRequestParameters = mapOf("kakaoAccessTokenParameter" to "kakaoAccessTokenParameter"),
+            userInfoHttpMethod = HttpMethod.GET,
+            userInfoUri = "kakao_userInfoUri",
             userInfoAttributes = ResourceServer.UserInfoAttributes(
-                profile = "kakaoProfile",
+                profileImage = "kakaoProfile",
                 email = "kakaoEmail"
             )
         )
@@ -49,11 +59,18 @@ internal class DefaultOauth2AuthenticationCodeFactoryTest {
     @Test
     fun getOauth2AuthenticationCodeBy_return_oauth2AuthenticationCode_through_authenticationCode_redirected() {
         clients.forEach { client ->
-            val servletRequest = MockHttpServletRequest("GET", "/auth/${client.key}")
-            val requestedAuthenticationCode = "${client.key}AuthenticationCode"
+            val resourceServer = client.value
+            val servletRequest = MockHttpServletRequest("GET", "/auth/${resourceServer.clientName}")
+            val requestedAuthenticationCode = "${resourceServer.clientName}AuthenticationCode"
             servletRequest.addParameter("code", requestedAuthenticationCode)
             val authenticationCode = defaultOauth2AuthenticationCodeFactory.getOauth2AuthenticationCodeBy(servletRequest)
-            assertThat(authenticationCode.resourceServer).isEqualTo(client.value)
+
+            assertThat(authenticationCode.accessTokenUri).isEqualTo(resourceServer.accessTokenUri)
+            assertThat(authenticationCode.resourceServerId).isEqualTo(resourceServer.resourceServerId)
+            assertThat(authenticationCode.accessTokenParameters).isEqualTo(resourceServer.accessTokenParameter)
+            assertThat(authenticationCode.userInfoHttpMethod).isEqualTo(resourceServer.userInfoHttpMethod)
+            assertThat(authenticationCode.userInfoUri).isEqualTo(resourceServer.userInfoUri)
+            assertThat(authenticationCode.userInfoAttributes).isEqualTo(resourceServer.userInfoAttributes.attributes)
             assertThat(authenticationCode.code).isEqualTo(requestedAuthenticationCode)
         }
     }
