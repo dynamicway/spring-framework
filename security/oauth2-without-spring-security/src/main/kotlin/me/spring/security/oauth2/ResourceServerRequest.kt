@@ -14,6 +14,8 @@ class ResourceServerRequest(
     private val userInfoAttributes: Map<String, String>
 ) {
 
+    val getAccessTokenResponseType = Oauth2AccessTokenResponse::class.java
+
     fun getAccessTokenRequestEntity(): RequestEntity<Void> {
         val uri = UriComponentsBuilder.fromUriString(accessTokenUri)
                 .queryParams(accessTokenParameters)

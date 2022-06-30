@@ -4,10 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatCode
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
-import org.springframework.util.LinkedMultiValueMap
-import org.springframework.web.util.UriComponentsBuilder
 
 internal class DefaultOauth2UserProviderTest {
 
@@ -24,16 +21,11 @@ internal class DefaultOauth2UserProviderTest {
 
     @Test
     fun getOauth2User_get_accessToken_by_restTemplate() {
-        val authenticationCode = getOauth2AuthenticationCodeDummy()
-        val accessTokenRequestParameters = LinkedMultiValueMap<String, String>()
-        defaultOauth2UserProvider.getOauth2User(authenticationCode)
-        val accessTokenRequestUri = UriComponentsBuilder.fromUriString(authenticationCode.accessTokenUri)
-                .queryParams(accessTokenRequestParameters)
-                .build()
-                .toUri()
-        assertThat(spyRestTemplate.exchangeArgumentsEntity.url).isEqualTo(accessTokenRequestUri)
-        assertThat(spyRestTemplate.exchangeArgumentsEntity.method).isEqualTo(HttpMethod.POST)
-        assertThat(spyRestTemplate.exchangeArgumentsResponseType).isEqualTo(Oauth2AccessTokenResponse::class.java)
+        val resourceServerRequest = getResourceServerRequest()
+        defaultOauth2UserProvider.getOauth2User(resourceServerRequest)
+
+        assertThat(spyRestTemplate.exchangeArgumentsEntity).isEqualTo(resourceServerRequest.getAccessTokenRequestEntity())
+        assertThat(spyRestTemplate.exchangeArgumentsResponseType).isEqualTo(resourceServerRequest.getAccessTokenResponseType)
     }
 
     @Test
@@ -41,8 +33,7 @@ internal class DefaultOauth2UserProviderTest {
         spyRestTemplate.exchangeResult = ResponseEntity.noContent()
                 .build()
 
-        assertThatCode { defaultOauth2UserProvider.getOauth2User(getOauth2AuthenticationCodeDummy()) }
-                .isInstanceOf(IllegalStateException::class.java)
+        assertThatCode { defaultOauth2UserProvider.getOauth2User(getResourceServerRequest()) }.isInstanceOf(IllegalStateException::class.java)
     }
 
 }
