@@ -38,7 +38,14 @@ class ResourceServerRequest(
 
     fun getUserAttributes(getUserInfoResponse: Map<String, *>): HashMap<String, String> {
         val userAttributes = hashMapOf<String, String>()
-        userInfoAttributes.forEach { userAttributes[it.key] = getUserInfoResponse[it.value] as String }
+        userInfoAttributes.forEach { userInfo ->
+            var userInfoResponse: Any = getUserInfoResponse
+            userInfo.value.split(".")
+                    .forEach { attribute ->
+                        userInfoResponse = (userInfoResponse as Map<*, *>)[attribute]!!
+                    }
+            userAttributes[userInfo.key] = userInfoResponse as String
+        }
         return userAttributes
     }
 
