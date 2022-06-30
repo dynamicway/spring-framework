@@ -18,7 +18,7 @@ class DefaultOauth2AuthenticationCodeFactory(private val clients: HashMap<String
 
         return Oauth2AuthenticationCode(
             accessTokenUri = resourceServer.accessTokenUri,
-            accessTokenParameters = resourceServer.accessTokenParameter,
+            accessTokenParameters = resourceServer.accessTokenParameter.apply { add("code", authenticationCode) },
             userInfoHttpMethod = resourceServer.userInfoHttpMethod,
             userInfoUri = resourceServer.userInfoUri,
             resourceServerId = resourceServer.resourceServerId,

@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions.assertThatCode
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpMethod
 import org.springframework.mock.web.MockHttpServletRequest
+import org.springframework.util.LinkedMultiValueMap
 
 internal class DefaultOauth2AuthenticationCodeFactoryTest {
 
@@ -64,10 +65,16 @@ internal class DefaultOauth2AuthenticationCodeFactoryTest {
             val requestedAuthenticationCode = "${resourceServer.clientName}AuthenticationCode"
             servletRequest.addParameter("code", requestedAuthenticationCode)
             val authenticationCode = defaultOauth2AuthenticationCodeFactory.getOauth2AuthenticationCodeBy(servletRequest)
+            val accessTokenParameter = LinkedMultiValueMap<String, String>()
+                    .apply {
+                        putAll(resourceServer.accessTokenParameter)
+                        add("code", requestedAuthenticationCode)
+                    }
+            resourceServer.userInfoAttributes
 
             assertThat(authenticationCode.accessTokenUri).isEqualTo(resourceServer.accessTokenUri)
             assertThat(authenticationCode.resourceServerId).isEqualTo(resourceServer.resourceServerId)
-            assertThat(authenticationCode.accessTokenParameters).isEqualTo(resourceServer.accessTokenParameter)
+            assertThat(authenticationCode.accessTokenParameters).isEqualTo(accessTokenParameter)
             assertThat(authenticationCode.userInfoHttpMethod).isEqualTo(resourceServer.userInfoHttpMethod)
             assertThat(authenticationCode.userInfoUri).isEqualTo(resourceServer.userInfoUri)
             assertThat(authenticationCode.userInfoAttributes).isEqualTo(resourceServer.userInfoAttributes.attributes)

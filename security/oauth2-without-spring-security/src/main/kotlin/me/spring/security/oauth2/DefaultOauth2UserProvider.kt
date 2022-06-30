@@ -1,7 +1,8 @@
 package me.spring.security.oauth2
 
+import org.springframework.http.HttpMethod
+import org.springframework.http.RequestEntity
 import org.springframework.stereotype.Component
-import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 
@@ -11,13 +12,13 @@ class DefaultOauth2UserProvider(
 ): Oauth2UserProvider {
 
     override fun getOauth2User(authenticationCode: Oauth2AuthenticationCode): Oauth2User {
-        val accessTokenRequestParameters = LinkedMultiValueMap<String, String>()
-        authenticationCode.accessTokenParameters.forEach { accessTokenRequestParameters.add(it.key, it.value) }
         val accessTokenRequestUri = UriComponentsBuilder.fromUriString(authenticationCode.accessTokenUri)
-                .queryParams(accessTokenRequestParameters)
+                .queryParams(authenticationCode.accessTokenParameters)
                 .build()
                 .toUri()
-        restTemplate.getForEntity(accessTokenRequestUri, Oauth2AccessTokenResponse::class.java).body ?: throw IllegalStateException()
+        val accessTokenRequest = RequestEntity.method(HttpMethod.POST, accessTokenRequestUri)
+                .build()
+        restTemplate.exchange(accessTokenRequest, Oauth2AccessTokenResponse::class.java).body ?: throw IllegalStateException()
 
         return Oauth2User()
     }
