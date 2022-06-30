@@ -66,12 +66,40 @@ internal class ResourceServerRequestTest {
             )
         )
 
-        assertThat(userAttributes).containsExactlyInAnyOrderEntriesOf(mapOf(
-            "property1" to "one",
-            "property2" to "two",
-            "property3" to "three"
-        ))
+        assertThat(userAttributes).containsExactlyInAnyOrderEntriesOf(
+            mapOf(
+                "property1" to "one",
+                "property2" to "two",
+                "property3" to "three"
+            )
+        )
     }
 
+    @Test
+    fun getUserAttributes_getUserInfoResponse_is_not_flat_map() {
+        val userInfoAttributes = mapOf(
+            "property1" to "1",
+            "property2" to "2.2",
+            "property3" to "3.3.3"
+        )
+        val resourceServerRequest = getResourceServerRequest(
+            userInfoAttributes = userInfoAttributes
+        )
+        val userAttributes = resourceServerRequest.getUserAttributes(
+            mapOf(
+                "1" to "one",
+                "2" to mapOf("2" to "two"),
+                "3" to mapOf("3" to mapOf("3" to "three"))
+            )
+        )
+
+        assertThat(userAttributes).containsExactlyInAnyOrderEntriesOf(
+            mapOf(
+                "property1" to "one",
+                "property2" to "two",
+                "property3" to "three"
+            )
+        )
+    }
 
 }
