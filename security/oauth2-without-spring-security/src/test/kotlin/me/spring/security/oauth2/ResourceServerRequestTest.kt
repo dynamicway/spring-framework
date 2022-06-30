@@ -48,4 +48,30 @@ internal class ResourceServerRequestTest {
         assertThat(userInfoRequestEntity.headers[HttpHeaders.AUTHORIZATION]!![0]).isEqualTo("Bearer $accessToken")
     }
 
+    @Test
+    fun getUserAttribute_getUserInfoResponse_is_flat_map() {
+        val userInfoAttributes = mapOf(
+            "property1" to "1",
+            "property2" to "2",
+            "property3" to "3"
+        )
+        val resourceServerRequest = getResourceServerRequest(
+            userInfoAttributes = userInfoAttributes
+        )
+        val userAttributes = resourceServerRequest.getUserAttributes(
+            mapOf(
+                "1" to "one",
+                "2" to "two",
+                "3" to "three"
+            )
+        )
+
+        assertThat(userAttributes).containsExactlyInAnyOrderEntriesOf(mapOf(
+            "property1" to "one",
+            "property2" to "two",
+            "property3" to "three"
+        ))
+    }
+
+
 }
