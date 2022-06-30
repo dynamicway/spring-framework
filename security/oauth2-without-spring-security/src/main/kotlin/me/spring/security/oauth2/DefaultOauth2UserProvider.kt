@@ -9,7 +9,9 @@ class DefaultOauth2UserProvider(
 ): Oauth2UserProvider {
 
     override fun getOauth2User(resourceServerRequest: ResourceServerRequest): Oauth2User {
-        restTemplate.exchange(resourceServerRequest.getAccessTokenRequestEntity(), resourceServerRequest.getAccessTokenResponseType).body ?: throw IllegalStateException()
+        val oauth2AccessTokenResponse = restTemplate.exchange(resourceServerRequest.getAccessTokenRequestEntity(), resourceServerRequest.getAccessTokenResponseType).body ?: throw IllegalStateException()
+        restTemplate.exchange(resourceServerRequest.getUserInfoRequestEntity(oauth2AccessTokenResponse.accessToken), Map::class.java)
+
 
         return Oauth2User()
     }
