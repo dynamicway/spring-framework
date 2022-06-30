@@ -36,6 +36,12 @@ class ResourceServerRequest(
                 .build()
     }
 
+    fun getUserAttributes(getUserInfoResponse: Map<String, *>): HashMap<String, String> {
+        val userAttributes = hashMapOf<String, String>()
+        userInfoAttributes.forEach { userAttributes[it.key] = getUserInfoResponse[it.value] as String }
+        return userAttributes
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
