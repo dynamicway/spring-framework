@@ -10,7 +10,7 @@ import org.springframework.util.LinkedMultiValueMap
 internal class DefaultResourceServerRequestFactoryTest {
 
     private val clients = hashMapOf(
-        "google" to getResourceServerDummy(
+        "google" to getResourceServer(
             clientName = "google",
             clientId = "googleClientId",
             clientSecret = "googleClientSecret",
@@ -24,7 +24,7 @@ internal class DefaultResourceServerRequestFactoryTest {
                 email = "googleEmail"
             )
         ),
-        "naver" to getResourceServerDummy(
+        "naver" to getResourceServer(
             clientName = "naver",
             clientId = "naverClientId",
             clientSecret = "naverClientSecret",
@@ -38,7 +38,7 @@ internal class DefaultResourceServerRequestFactoryTest {
                 email = "naverEmail"
             )
         ),
-        "kakao" to getResourceServerDummy(
+        "kakao" to getResourceServer(
             clientName = "kakao",
             clientId = "kakaoClientId",
             clientSecret = "kakaoClientSecret",
@@ -64,18 +64,21 @@ internal class DefaultResourceServerRequestFactoryTest {
             val servletRequest = MockHttpServletRequest("GET", "/auth/${resourceServer.clientName}")
             val requestedAuthenticationCode = "${resourceServer.clientName}AuthenticationCode"
             servletRequest.addParameter("code", requestedAuthenticationCode)
-            val authenticationCode = defaultOauth2AuthenticationCodeFactory.getResourceServerRequestBy(servletRequest)
-            val accessTokenParameter = LinkedMultiValueMap<String, String>()
+            val resourceServerRequest = defaultOauth2AuthenticationCodeFactory.getResourceServerRequestBy(servletRequest)
+            val accessTokenParameters = LinkedMultiValueMap<String, String>()
                     .apply {
                         putAll(resourceServer.accessTokenParameter)
                         add("code", requestedAuthenticationCode)
                     }
+            val expectedResourceServerRequest = getResourceServerRequest(
+                accessTokenUri = resourceServer.accessTokenUri,
+                accessTokenParameters = accessTokenParameters,
+                userInfoHttpMethod = resourceServer.userInfoHttpMethod,
+                userInfoUri = resourceServer.userInfoUri,
+                userInfoAttributes = resourceServer.userInfoAttributes.attributes
+            )
 
-            assertThat(authenticationCode.accessTokenUri).isEqualTo(resourceServer.accessTokenUri)
-            assertThat(authenticationCode.accessTokenParameters).isEqualTo(accessTokenParameter)
-            assertThat(authenticationCode.userInfoHttpMethod).isEqualTo(resourceServer.userInfoHttpMethod)
-            assertThat(authenticationCode.userInfoUri).isEqualTo(resourceServer.userInfoUri)
-            assertThat(authenticationCode.userInfoAttributes).isEqualTo(resourceServer.userInfoAttributes.attributes)
+            assertThat(resourceServerRequest).isEqualTo(expectedResourceServerRequest)
         }
     }
 

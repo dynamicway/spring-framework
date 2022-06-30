@@ -33,4 +33,28 @@ class ResourceServerRequest(
                 .build()
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ResourceServerRequest
+
+        if (accessTokenUri != other.accessTokenUri) return false
+        if (accessTokenParameters != other.accessTokenParameters) return false
+        if (userInfoHttpMethod != other.userInfoHttpMethod) return false
+        if (userInfoUri != other.userInfoUri) return false
+        if (userInfoAttributes != other.userInfoAttributes) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = accessTokenUri.hashCode()
+        result = 31 * result + accessTokenParameters.hashCode()
+        result = 31 * result + userInfoHttpMethod.hashCode()
+        result = 31 * result + userInfoUri.hashCode()
+        result = 31 * result + userInfoAttributes.hashCode()
+        return result
+    }
+
 }
