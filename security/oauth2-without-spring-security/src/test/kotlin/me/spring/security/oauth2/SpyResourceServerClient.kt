@@ -10,7 +10,11 @@ class SpyResourceServerClient: ResourceServerClient {
 
     lateinit var getUserInfoArgumentsResponseType: Class<*>
     lateinit var getUserInfoArgumentsEntity: RequestEntity<Void>
-    var getUserInfoResult: Any? = mapOf<String, String>()
+    var getUserInfoResult: Any? = mapOf(
+        "id" to "id",
+        "profileImage" to "profileImage",
+        "email" to "email"
+    )
 
     override fun <T> getAccessToken(
         accessTokenRequest: RequestEntity<Void>,

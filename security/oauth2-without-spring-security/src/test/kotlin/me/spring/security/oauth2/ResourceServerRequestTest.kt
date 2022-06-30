@@ -56,7 +56,9 @@ internal class ResourceServerRequestTest {
             "property2" to "2",
             "property3" to "3"
         )
+        val resourceServerName = "google"
         val resourceServerRequest = getResourceServerRequest(
+            resourceServerName = resourceServerName,
             userInfoAttributes = userInfoAttributes
         )
         val userAttributes = resourceServerRequest.getUserAttributes(
@@ -71,7 +73,8 @@ internal class ResourceServerRequestTest {
             mapOf(
                 "property1" to "one",
                 "property2" to "two",
-                "property3" to "three"
+                "property3" to "three",
+                "resourceServerName" to resourceServerName
             )
         )
     }
@@ -83,7 +86,9 @@ internal class ResourceServerRequestTest {
             "property2" to "2.2",
             "property3" to "3.3.3"
         )
+        val resourceServerName = "kakao"
         val resourceServerRequest = getResourceServerRequest(
+            resourceServerName = resourceServerName,
             userInfoAttributes = userInfoAttributes
         )
         val userAttributes = resourceServerRequest.getUserAttributes(
@@ -98,7 +103,8 @@ internal class ResourceServerRequestTest {
             mapOf(
                 "property1" to "one",
                 "property2" to "two",
-                "property3" to "three"
+                "property3" to "three",
+                "resourceServerName" to resourceServerName
             )
         )
     }

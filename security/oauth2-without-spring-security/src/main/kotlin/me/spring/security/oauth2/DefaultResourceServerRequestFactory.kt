@@ -16,6 +16,7 @@ class DefaultResourceServerRequestFactory(private val clients: HashMap<String, R
         val resourceServer = clients[resourceServerName] ?: throw IllegalArgumentException("not supported resource server")
 
         return ResourceServerRequest(
+            resourceServerName = resourceServerName,
             accessTokenUri = resourceServer.accessTokenUri,
             accessTokenParameters = resourceServer.accessTokenParameter.apply { add("code", authenticationCode) },
             userInfoHttpMethod = resourceServer.userInfoHttpMethod,

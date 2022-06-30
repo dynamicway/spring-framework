@@ -29,12 +29,18 @@ internal fun getResourceServer(
 )
 
 internal fun getResourceServerRequest(
+    resourceServerName: String = "google",
     accessTokenUri: String = "https://accessTokenUri",
     accessTokenParameters: MultiValueMap<String, String> = LinkedMultiValueMap(),
     userInfoHttpMethod: HttpMethod = HttpMethod.GET,
     userInfoUri: String = "userInfoUri",
-    userInfoAttributes: Map<String, String> = mapOf("userInfoAttribute" to "userInfoAttribute"),
+    userInfoAttributes: Map<String, String> = mapOf(
+        "id" to "id",
+        "profileImage" to "profileImage",
+        "email" to "email"
+    ),
 ) = ResourceServerRequest(
+    resourceServerName = resourceServerName,
     accessTokenUri = accessTokenUri,
     accessTokenParameters = accessTokenParameters,
     userInfoHttpMethod = userInfoHttpMethod,

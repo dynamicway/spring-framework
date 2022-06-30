@@ -71,6 +71,7 @@ internal class DefaultResourceServerRequestFactoryTest {
                         add("code", requestedAuthenticationCode)
                     }
             val expectedResourceServerRequest = getResourceServerRequest(
+                resourceServerName = resourceServer.clientName,
                 accessTokenUri = resourceServer.accessTokenUri,
                 accessTokenParameters = accessTokenParameters,
                 userInfoHttpMethod = resourceServer.userInfoHttpMethod,

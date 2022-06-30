@@ -7,6 +7,7 @@ import org.springframework.util.MultiValueMap
 import org.springframework.web.util.UriComponentsBuilder
 
 class ResourceServerRequest(
+    private val resourceServerName: String,
     private val accessTokenUri: String,
     private val accessTokenParameters: MultiValueMap<String, String>,
     private val userInfoHttpMethod: HttpMethod,
@@ -36,7 +37,7 @@ class ResourceServerRequest(
                 .build()
     }
 
-    fun getUserAttributes(getUserInfoResponse: Map<String, *>): Map<String, String> {
+    fun getUserAttributes(getUserInfoResponse: Map<*, *>): Map<String, String> {
         val userAttributes = hashMapOf<String, String>()
         userInfoAttributes.forEach { userInfo ->
             var userInfoResponse: Any = getUserInfoResponse
@@ -47,6 +48,7 @@ class ResourceServerRequest(
                     }
             userAttributes[userInfo.key] = userInfoResponse as String
         }
+        userAttributes["resourceServerName"] = resourceServerName
         return userAttributes
     }
 
@@ -56,21 +58,27 @@ class ResourceServerRequest(
 
         other as ResourceServerRequest
 
+        if (resourceServerName != other.resourceServerName) return false
         if (accessTokenUri != other.accessTokenUri) return false
         if (accessTokenParameters != other.accessTokenParameters) return false
         if (userInfoHttpMethod != other.userInfoHttpMethod) return false
         if (userInfoUri != other.userInfoUri) return false
         if (userInfoAttributes != other.userInfoAttributes) return false
+        if (getUserInfoResponseType != other.getUserInfoResponseType) return false
+        if (getAccessTokenResponseType != other.getAccessTokenResponseType) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = accessTokenUri.hashCode()
+        var result = resourceServerName.hashCode()
+        result = 31 * result + accessTokenUri.hashCode()
         result = 31 * result + accessTokenParameters.hashCode()
         result = 31 * result + userInfoHttpMethod.hashCode()
         result = 31 * result + userInfoUri.hashCode()
         result = 31 * result + userInfoAttributes.hashCode()
+        result = 31 * result + getUserInfoResponseType.hashCode()
+        result = 31 * result + getAccessTokenResponseType.hashCode()
         return result
     }
 
