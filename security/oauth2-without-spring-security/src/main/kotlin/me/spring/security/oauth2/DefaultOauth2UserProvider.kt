@@ -9,13 +9,14 @@ class DefaultOauth2UserProvider(
 
     override fun getOauth2User(resourceServerRequest: ResourceServerRequest): Oauth2User {
         val oauth2AccessTokenResponse = resourceServerClient.getAccessToken(resourceServerRequest.getAccessTokenRequestEntity(), resourceServerRequest.getAccessTokenResponseType) ?: throw IllegalStateException()
-        resourceServerClient.getUserInfo(resourceServerRequest.getUserInfoRequestEntity(oauth2AccessTokenResponse.accessToken), Map::class.java)
+        val userInfoAttributes = resourceServerClient.getUserInfo(resourceServerRequest.getUserInfoRequestEntity(oauth2AccessTokenResponse.accessToken), resourceServerRequest.getUserInfoResponseType) ?: throw IllegalStateException()
+        val userAttributes = resourceServerRequest.getUserAttributes(userInfoAttributes)
 
         return Oauth2User(
-            id = "id",
-            profileImage = "",
-            email = "",
-            resourceServerName = ""
+            id = userAttributes["id"]!!,
+            profileImage = userAttributes["profileImage"],
+            email = userAttributes["email"],
+            resourceServerName = userAttributes["resourceServerName"]!!
         )
     }
 

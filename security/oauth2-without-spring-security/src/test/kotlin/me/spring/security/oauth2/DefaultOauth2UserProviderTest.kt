@@ -45,4 +45,34 @@ internal class DefaultOauth2UserProviderTest {
         assertThat(spyResourceServerClient.getUserInfoArgumentsResponseType).isEqualTo(resourceServerRequest.getUserInfoResponseType)
     }
 
+    @Test
+    fun getOauth2User_throw_IllegalStateException_when_get_userInfo_is_null() {
+        spyResourceServerClient.getUserInfoResult = null
+        assertThatCode { defaultOauth2UserProvider.getOauth2User(getResourceServerRequest()) }
+                .isInstanceOf(IllegalStateException::class.java)
+    }
+
+    @Test
+    fun getOauth2User_return_Oauth2User_by_resourceServerRequest_with_userInfo() {
+        val resourceServerRequest = getResourceServerRequest()
+        val getUserInfoResult = mapOf(
+            "id" to "1",
+            "profileImage" to "image",
+            "email" to "email@email.com"
+        )
+
+        spyResourceServerClient.getUserInfoResult = getUserInfoResult
+        val userAttributes = resourceServerRequest.getUserAttributes(getUserInfoResult)
+        val expectedOauth2User = Oauth2User(
+            id = userAttributes["id"]!!,
+            profileImage = userAttributes["profileImage"],
+            email = userAttributes["email"],
+            resourceServerName = userAttributes["resourceServerName"]!!
+        )
+
+        val oauth2User = defaultOauth2UserProvider.getOauth2User(resourceServerRequest)
+
+        assertThat(oauth2User).isEqualTo(expectedOauth2User)
+    }
+
 }
