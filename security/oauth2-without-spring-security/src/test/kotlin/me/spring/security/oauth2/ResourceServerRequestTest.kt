@@ -1,6 +1,7 @@
 package me.spring.security.oauth2
 
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatCode
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -100,6 +101,50 @@ internal class ResourceServerRequestTest {
                 "property3" to "three"
             )
         )
+    }
+
+    @Test
+    fun getUserAttributes_throw_IllegalArgumentsException_when_getUserInfoResponse_has_no_attribute() {
+        val userInfoAttributes = mapOf(
+            "property1" to "1",
+            "property2" to "2.2",
+            "property3" to "3.3.3"
+        )
+        val resourceServerRequest = getResourceServerRequest(
+            userInfoAttributes = userInfoAttributes
+        )
+
+        assertThatCode {
+            resourceServerRequest.getUserAttributes(
+                mapOf(
+                    "1" to "one",
+                    "2" to "2",
+                    "3" to mapOf("3" to mapOf("3" to "three"))
+                )
+            )
+        }.isInstanceOf(IllegalArgumentException::class.java)
+
+    }
+
+    @Test
+    fun getUserAttributes_throw_IllegalArgumentsException_when_getUserInfoResponse_attribute_is_null() {
+        val userInfoAttributes = mapOf(
+            "property1" to "1",
+            "property2" to "2",
+            "property3" to "3"
+        )
+        val resourceServerRequest = getResourceServerRequest(
+            userInfoAttributes = userInfoAttributes
+        )
+
+        assertThatCode {
+            resourceServerRequest.getUserAttributes(
+                mapOf(
+                    "1" to "one",
+                    "2" to "two",
+                )
+            )
+        }.isInstanceOf(IllegalArgumentException::class.java)
     }
 
 }

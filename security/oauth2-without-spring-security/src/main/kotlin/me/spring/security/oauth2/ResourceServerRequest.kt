@@ -36,13 +36,15 @@ class ResourceServerRequest(
                 .build()
     }
 
-    fun getUserAttributes(getUserInfoResponse: Map<String, *>): HashMap<String, String> {
+    fun getUserAttributes(getUserInfoResponse: Map<String, *>): Map<String, String> {
         val userAttributes = hashMapOf<String, String>()
         userInfoAttributes.forEach { userInfo ->
             var userInfoResponse: Any = getUserInfoResponse
             userInfo.value.split(".")
                     .forEach { attribute ->
-                        userInfoResponse = (userInfoResponse as Map<*, *>)[attribute]!!
+                        if (userInfoResponse !is Map<*, *>)
+                            throw IllegalArgumentException()
+                        userInfoResponse = (userInfoResponse as Map<*, *>)[attribute] ?: throw IllegalArgumentException()
                     }
             userAttributes[userInfo.key] = userInfoResponse as String
         }
