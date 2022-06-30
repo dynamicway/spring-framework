@@ -14,7 +14,7 @@ class ResourceServerRequest(
     private val userInfoAttributes: Map<String, String>
 ) {
 
-    val getUserInfoRequestType = Map::class.java
+    val getUserInfoResponseType = Map::class.java
     val getAccessTokenResponseType = Oauth2AccessTokenResponse::class.java
 
     fun getAccessTokenRequestEntity(): RequestEntity<Void> {
@@ -42,8 +42,7 @@ class ResourceServerRequest(
             var userInfoResponse: Any = getUserInfoResponse
             userInfo.value.split(".")
                     .forEach { attribute ->
-                        if (userInfoResponse !is Map<*, *>)
-                            throw IllegalArgumentException()
+                        if (userInfoResponse !is Map<*, *>) throw IllegalArgumentException()
                         userInfoResponse = (userInfoResponse as Map<*, *>)[attribute] ?: throw IllegalArgumentException()
                     }
             userAttributes[userInfo.key] = userInfoResponse as String
