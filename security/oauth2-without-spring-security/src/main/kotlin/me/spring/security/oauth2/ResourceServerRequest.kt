@@ -1,5 +1,6 @@
 package me.spring.security.oauth2
 
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.RequestEntity
 import org.springframework.util.MultiValueMap
@@ -19,6 +20,16 @@ class ResourceServerRequest(
                 .build()
                 .toUri()
         return RequestEntity.method(userInfoHttpMethod, uri)
+                .build()
+    }
+
+    fun getUserInfoRequestEntity(accessToken: String): RequestEntity<Void> {
+        val uri = UriComponentsBuilder.fromUriString(userInfoUri)
+                .build()
+                .toUri()
+
+        return RequestEntity.method(userInfoHttpMethod, uri)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken")
                 .build()
     }
 
