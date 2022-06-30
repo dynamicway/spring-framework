@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions.assertThatCode
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.http.ResponseEntity
+import java.util.*
 
 internal class DefaultOauth2UserProviderTest {
 
@@ -20,12 +21,12 @@ internal class DefaultOauth2UserProviderTest {
     }
 
     @Test
-    fun getOauth2User_get_accessToken_by_restTemplate() {
+    fun getOauth2User_get_accessToken_by_resourceServerRequest() {
         val resourceServerRequest = getResourceServerRequest()
         defaultOauth2UserProvider.getOauth2User(resourceServerRequest)
 
-        assertThat(spyRestTemplate.exchangeArgumentsEntity).isEqualTo(resourceServerRequest.getAccessTokenRequestEntity())
-        assertThat(spyRestTemplate.exchangeArgumentsResponseType).isEqualTo(resourceServerRequest.getAccessTokenResponseType)
+        assertThat(spyRestTemplate.exchangeArgumentsEntity).contains(resourceServerRequest.getAccessTokenRequestEntity())
+        assertThat(spyRestTemplate.exchangeArgumentsResponseType).contains(resourceServerRequest.getAccessTokenResponseType)
     }
 
     @Test
@@ -34,6 +35,17 @@ internal class DefaultOauth2UserProviderTest {
                 .build()
 
         assertThatCode { defaultOauth2UserProvider.getOauth2User(getResourceServerRequest()) }.isInstanceOf(IllegalStateException::class.java)
+    }
+
+    @Test
+    fun getOauth2User_get_userInfo_by_resourceServerRequest() {
+        val resourceServerRequest = getResourceServerRequest()
+        val accessToken = "accessToken"
+        spyRestTemplate.exchangeResult = ResponseEntity.of(Optional.of(Oauth2AccessTokenResponse(accessToken = accessToken)))
+        defaultOauth2UserProvider.getOauth2User(resourceServerRequest)
+
+        assertThat(spyRestTemplate.exchangeArgumentsEntity).contains(resourceServerRequest.getUserInfoRequestEntity(accessToken))
+        assertThat(spyRestTemplate.exchangeArgumentsResponseType).contains(resourceServerRequest.getUserInfoRequestType)
     }
 
 }

@@ -14,6 +14,7 @@ class ResourceServerRequest(
     private val userInfoAttributes: Map<String, String>
 ) {
 
+    val getUserInfoRequestType = Map::class.java
     val getAccessTokenResponseType = Oauth2AccessTokenResponse::class.java
 
     fun getAccessTokenRequestEntity(): RequestEntity<Void> {
