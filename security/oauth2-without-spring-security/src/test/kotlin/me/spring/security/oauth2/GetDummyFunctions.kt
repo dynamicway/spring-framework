@@ -4,7 +4,7 @@ import org.springframework.http.HttpMethod
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 
-fun getResourceServerDummy(
+internal fun getResourceServer(
     clientName: String = "clientname",
     clientId: String = "clientid",
     clientSecret: String = "clientsecret",
@@ -28,7 +28,7 @@ fun getResourceServerDummy(
     userInfoAttributes = userInfoAttributes
 )
 
-fun getResourceServerRequestDummy(
+internal fun getResourceServerRequest(
     accessTokenUri: String = "https://accessTokenUri",
     accessTokenParameters: MultiValueMap<String, String> = LinkedMultiValueMap(),
     userInfoHttpMethod: HttpMethod = HttpMethod.GET,
