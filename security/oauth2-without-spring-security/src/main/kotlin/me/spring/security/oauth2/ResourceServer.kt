@@ -8,7 +8,6 @@ class ResourceServer(
     val clientName: String,
     val clientId: String,
     val clientSecret: String,
-    val resourceServerId: String,
     val accessTokenUri: String,
     private val additionalAccessTokenRequestParameters: Map<String, String> = hashMapOf(),
     val userInfoHttpMethod: HttpMethod,
@@ -27,12 +26,14 @@ class ResourceServer(
     }
 
     class UserInfoAttributes(
-        val profileImage: String,
-        val email: String
+        private val id: String,
+        private val profileImage: String,
+        private val email: String
     ) {
 
         val attributes by lazy {
             mapOf(
+                "id" to id,
                 "profileImage" to profileImage,
                 "email" to email
             )

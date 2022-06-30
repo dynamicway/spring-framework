@@ -8,7 +8,7 @@ import javax.servlet.ServletResponse
 
 @Component
 class Oauth2AuthenticationCodeFilter(
-    private val oauth2AuthenticationCodeFactory: Oauth2AuthenticationCodeFactory,
+    private val resourceServerRequestFactory: ResourceServerRequestFactory,
     private val oauth2UserProvider: Oauth2UserProvider
 ): Filter {
 
@@ -17,7 +17,7 @@ class Oauth2AuthenticationCodeFilter(
         response: ServletResponse,
         chain: FilterChain
     ) {
-        val oauth2AuthenticationCodeBy = oauth2AuthenticationCodeFactory.getOauth2AuthenticationCodeBy(request)
+        val oauth2AuthenticationCodeBy = resourceServerRequestFactory.getResourceServerRequestBy(request)
         oauth2UserProvider.getOauth2User(oauth2AuthenticationCodeBy)
     }
 
