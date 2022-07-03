@@ -23,7 +23,7 @@ class ResourceServerRequest(
                 .queryParams(accessTokenParameters)
                 .build()
                 .toUri()
-        return RequestEntity.method(userInfoHttpMethod, uri)
+        return RequestEntity.method(HttpMethod.POST, uri)
                 .build()
     }
 

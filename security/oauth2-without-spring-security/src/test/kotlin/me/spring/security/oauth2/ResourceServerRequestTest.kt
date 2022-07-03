@@ -11,7 +11,6 @@ internal class ResourceServerRequestTest {
 
     @Test
     fun getAccessTokenRequestEntity() {
-        val userInfoHttpMethod = HttpMethod.GET
         val accessTokenHost = "https://www.googleapis.com"
         val accessTokenPath = "/oauth2/v3/userinfo"
         val accessTokenParameters = LinkedMultiValueMap<String, String>().apply {
@@ -21,12 +20,11 @@ internal class ResourceServerRequestTest {
         }
         val resourceServerRequest = getResourceServerRequest(
             accessTokenUri = "$accessTokenHost$accessTokenPath",
-            userInfoHttpMethod = userInfoHttpMethod,
             accessTokenParameters = accessTokenParameters
         )
         val accessTokenRequestEntity = resourceServerRequest.getAccessTokenRequestEntity()
 
-        assertThat(accessTokenRequestEntity.method).isEqualTo(userInfoHttpMethod)
+        assertThat(accessTokenRequestEntity.method).isEqualTo(HttpMethod.POST)
         assertThat("https://${accessTokenRequestEntity.url.host}${accessTokenRequestEntity.url.path}").isEqualTo("$accessTokenHost$accessTokenPath")
         assertThat(accessTokenRequestEntity.url.query).isEqualTo(accessTokenParameters.map { "${it.key}=${it.value[0]}" }
                 .reduce { acc, s -> "$acc&$s" })
@@ -82,28 +80,35 @@ internal class ResourceServerRequestTest {
     @Test
     fun getUserAttributes_getUserInfoResponse_is_not_flat_map() {
         val userInfoAttributes = mapOf(
-            "property1" to "1",
-            "property2" to "2.2",
-            "property3" to "3.3.3"
+            "id" to "id",
+            "profileImage" to "kakao_account.profile.profile_image_url",
+            "email" to "kakao_account.email"
         )
         val resourceServerName = "kakao"
         val resourceServerRequest = getResourceServerRequest(
             resourceServerName = resourceServerName,
             userInfoAttributes = userInfoAttributes
         )
+        val resourceServerId = 1234
+        val profileImage = "kakaoProfileImageUrl"
+        val email = "email"
         val userAttributes = resourceServerRequest.getUserAttributes(
             mapOf(
-                "1" to "one",
-                "2" to mapOf("2" to "two"),
-                "3" to mapOf("3" to mapOf("3" to "three"))
+                "id" to resourceServerId,
+                "kakao_account" to mapOf(
+                    "profile" to mapOf(
+                        "profile_image_url" to profileImage
+                    ),
+                    "email" to email
+                )
             )
         )
 
         assertThat(userAttributes).containsExactlyInAnyOrderEntriesOf(
             mapOf(
-                "property1" to "one",
-                "property2" to "two",
-                "property3" to "three",
+                "id" to resourceServerId.toString(),
+                "profileImage" to profileImage,
+                "email" to email,
                 "resourceServerName" to resourceServerName
             )
         )
