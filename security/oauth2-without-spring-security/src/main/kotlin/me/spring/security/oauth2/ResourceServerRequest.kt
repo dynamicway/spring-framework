@@ -46,7 +46,7 @@ class ResourceServerRequest(
                         if (userInfoResponse !is Map<*, *>) throw IllegalArgumentException()
                         userInfoResponse = (userInfoResponse as Map<*, *>)[attribute] ?: throw IllegalArgumentException()
                     }
-            userAttributes[userInfo.key] = userInfoResponse as String
+            userAttributes[userInfo.key] = userInfoResponse.toString()
         }
         userAttributes["resourceServerName"] = resourceServerName
         return userAttributes
