@@ -1,4 +1,4 @@
-package me.spring.web.inflearnadvancedlavel.proxy.v2
+package me.spring.web.inflearnadvancedlavel.proxy.app.v2
 
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping

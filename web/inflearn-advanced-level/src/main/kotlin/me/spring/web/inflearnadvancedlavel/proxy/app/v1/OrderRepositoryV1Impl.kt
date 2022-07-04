@@ -1,8 +1,8 @@
-package me.spring.web.inflearnadvancedlavel.proxy.v2
+package me.spring.web.inflearnadvancedlavel.proxy.app.v1
 
-class OrderRepositoryV2 {
+class OrderRepositoryV1Impl: OrderRepositoryV1 {
 
-    fun save(itemId: String) {
+    override fun save(itemId: String) {
         if (itemId == "ex")
             throw java.lang.IllegalStateException("예외 발생!")
         sleep(1000)

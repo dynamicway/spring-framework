@@ -1,8 +1,8 @@
 package me.spring.web.inflearnadvancedlavel.proxy.config
 
-import me.spring.web.inflearnadvancedlavel.proxy.v2.OrderControllerV2
-import me.spring.web.inflearnadvancedlavel.proxy.v2.OrderRepositoryV2
-import me.spring.web.inflearnadvancedlavel.proxy.v2.OrderServiceV2
+import me.spring.web.inflearnadvancedlavel.proxy.app.v2.OrderControllerV2
+import me.spring.web.inflearnadvancedlavel.proxy.app.v2.OrderRepositoryV2
+import me.spring.web.inflearnadvancedlavel.proxy.app.v2.OrderServiceV2
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 

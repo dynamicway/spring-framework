@@ -1,4 +1,4 @@
-package me.spring.web.inflearnadvancedlavel.proxy.v1
+package me.spring.web.inflearnadvancedlavel.proxy.app.v1
 
 interface OrderRepositoryV1 {
 

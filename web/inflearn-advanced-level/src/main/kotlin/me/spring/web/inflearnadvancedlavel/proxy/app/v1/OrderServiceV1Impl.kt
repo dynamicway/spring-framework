@@ -1,4 +1,4 @@
-package me.spring.web.inflearnadvancedlavel.proxy.v1
+package me.spring.web.inflearnadvancedlavel.proxy.app.v1
 
 class OrderServiceV1Impl(
     private val orderRepository: OrderRepositoryV1
