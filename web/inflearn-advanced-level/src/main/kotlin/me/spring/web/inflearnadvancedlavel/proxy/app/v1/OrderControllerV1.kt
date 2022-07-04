@@ -16,6 +16,6 @@ interface OrderControllerV1 {
     ): String
 
     @GetMapping("/v1/no-log")
-    fun request(): String
+    fun noLog(): String
 
 }

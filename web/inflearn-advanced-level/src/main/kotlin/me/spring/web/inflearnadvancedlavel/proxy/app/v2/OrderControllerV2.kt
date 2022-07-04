@@ -17,7 +17,7 @@ class OrderControllerV2(
     }
 
     @GetMapping("/v2/no-log")
-    fun request(): String {
+    fun noLog(): String {
         return "ok"
     }
 }
