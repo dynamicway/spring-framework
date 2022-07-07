@@ -1,4 +1,4 @@
-package me.spring.web.dynamicproxy.user.proxy;
+package me.spring.web.dynamicproxy.proxy;
 
 import java.util.Arrays;
 

@@ -1,4 +1,4 @@
-package me.spring.web.dynamicproxy.user.proxy;
+package me.spring.web.dynamicproxy.proxy;
 
 import lombok.RequiredArgsConstructor;
 import me.spring.web.dynamicproxy.util.Cached;
@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
-public class UserServiceCgLibProxy implements MethodInterceptor {
+public class CacheCgLibProxy implements MethodInterceptor {
 
     private final Object target;
 

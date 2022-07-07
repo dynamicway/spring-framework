@@ -1,4 +1,4 @@
-package me.spring.web.dynamicproxy.user.proxy;
+package me.spring.web.dynamicproxy.proxy;
 
 import lombok.RequiredArgsConstructor;
 import me.spring.web.dynamicproxy.util.Cached;
@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
-public class UserServiceJdkDynamicProxy implements InvocationHandler {
+public class CacheJdkDynamicProxy implements InvocationHandler {
 
     private final Object target;
 
