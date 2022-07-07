@@ -2,33 +2,35 @@ package me.spring.web.dynamicproxy.user.proxy;
 
 import lombok.RequiredArgsConstructor;
 import me.spring.web.dynamicproxy.util.Cached;
+import org.springframework.cglib.proxy.MethodInterceptor;
+import org.springframework.cglib.proxy.MethodProxy;
+import org.springframework.core.annotation.AnnotationUtils;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
-public class UserServiceJdkDynamicProxy implements InvocationHandler {
+public class UserServiceCgLibProxy implements MethodInterceptor {
 
     private final Object target;
 
     private final Map<Arguments, Object> cacheRepository = new HashMap<>();
 
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws InvocationTargetException, IllegalAccessException {
-        if (method.getAnnotation(Cached.class) != null) {
+    public Object intercept(Object o, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
+        Cached cached = AnnotationUtils.findAnnotation(method, Cached.class);
+        if (cached != null) {
             Arguments arguments = new Arguments(args);
             if (cacheRepository.containsKey(arguments))
                 return cacheRepository.get(arguments);
             else {
-                Object result = method.invoke(target, args);
+                Object result = methodProxy.invoke(target, args);
                 cacheRepository.put(arguments, result);
                 return result;
             }
         }
-        return method.invoke(target, args);
+        return methodProxy.invoke(target, args);
     }
 
 }
