@@ -47,3 +47,23 @@ internal fun getResourceServerRequest(
     userInfoUri = userInfoUri,
     userInfoAttributes = userInfoAttributes,
 )
+
+internal fun getUserInfoRequest(
+    httpMethod: HttpMethod = HttpMethod.POST,
+    uri: String = "https://userInfo"
+) = UserInfoRequest(
+    httpMethod = httpMethod,
+    uri = uri
+)
+
+internal fun getAccessTokenRequestParameters(
+    grantType: String = "grantType",
+    clientId: String = "clientId",
+    clientSecret: String = "clientSecret",
+    redirectUri: String = "redirectUri"
+) = AccessTokenRequestParameters(
+    grantType = grantType,
+    clientId = clientId,
+    clientSecret = clientSecret,
+    redirectUri = redirectUri
+)
