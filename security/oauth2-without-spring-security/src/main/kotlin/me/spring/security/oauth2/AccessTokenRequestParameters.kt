@@ -2,7 +2,7 @@ package me.spring.security.oauth2
 
 import org.springframework.util.LinkedMultiValueMap
 
-class AccessTokenRequestParameters(
+data class AccessTokenRequestParameters(
     private val grantType: String,
     private val clientId: String,
     private val clientSecret: String,

@@ -4,7 +4,7 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.RequestEntity
 import org.springframework.web.util.UriComponentsBuilder
 
-class AccessTokenRequest(
+data class AccessTokenRequest(
     private val httpMethod: HttpMethod,
     private val uri: String,
     private val accessTokenRequestParameters: AccessTokenRequestParameters

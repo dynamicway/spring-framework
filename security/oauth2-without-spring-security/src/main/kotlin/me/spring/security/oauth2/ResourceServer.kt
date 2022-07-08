@@ -9,11 +9,25 @@ class ResourceServer(
     val clientId: String,
     val clientSecret: String,
     val accessTokenUri: String,
+    val grantType: String,
     private val additionalAccessTokenRequestParameters: Map<String, String> = hashMapOf(),
     val userInfoHttpMethod: HttpMethod,
     val userInfoUri: String,
-    val userInfoAttributes: UserInfoAttributes
+    val userInfoAttributes: Map<String, String>
 ) {
+
+    val accessTokenRequest by lazy {
+        AccessTokenRequest(
+            httpMethod = userInfoHttpMethod,
+            uri = userInfoUri,
+            accessTokenRequestParameters = AccessTokenRequestParameters(
+                grantType = grantType,
+                clientId = clientId,
+                clientSecret = clientSecret,
+                redirectUri = "http://localhost:8080/auth/$clientName"
+            )
+        )
+    }
 
     val accessTokenParameter: MultiValueMap<String, String> by lazy {
         LinkedMultiValueMap<String, String>().apply {
