@@ -43,20 +43,4 @@ class ResourceServer(
         }
     }
 
-    class UserInfoAttributes(
-        private val id: String,
-        private val profileImage: String,
-        private val email: String
-    ) {
-
-        val attributes by lazy {
-            mapOf(
-                "id" to id,
-                "profileImage" to profileImage,
-                "email" to email
-            )
-        }
-
-    }
-
 }
