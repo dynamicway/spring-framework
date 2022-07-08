@@ -4,7 +4,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.RequestEntity
 
-class UserInfoRequest(
+data class UserInfoRequest(
     private val httpMethod: HttpMethod,
     private val uri: String
 ) {

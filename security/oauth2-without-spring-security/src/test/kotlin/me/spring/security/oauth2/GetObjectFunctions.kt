@@ -8,12 +8,12 @@ internal fun getResourceServer(
     clientName: String = "clientname",
     clientId: String = "clientid",
     clientSecret: String = "clientsecret",
-    accessTokenUri: String = "https://accesTokenUri",
+    accessTokenRequestUri: String = "https://accesTokenUri",
+    accessTokenRequestHttpMethod: HttpMethod = HttpMethod.POST,
     grantType: String = "grantType",
-    accessTokenRequestParameters: Map<String, String> = mapOf("accesstokenparameter" to "accesstokenparameter"),
-    userInfoHttpMethod: HttpMethod = HttpMethod.GET,
-    userInfoUri: String = "userinfouri",
-    userInfoAttributes: Map<String, String> = mapOf(
+    userInfoRequestHttpMethod: HttpMethod = HttpMethod.GET,
+    userInfoRequestUri: String = "userinfouri",
+    userInfoResponseAttributes: Map<String, String> = mapOf(
         "id" to "id",
         "profileImage" to "profile",
         "email" to "email"
@@ -22,12 +22,12 @@ internal fun getResourceServer(
     clientName = clientName,
     clientId = clientId,
     clientSecret = clientSecret,
-    accessTokenUri = accessTokenUri,
+    accessTokenRequestUri = accessTokenRequestUri,
+    accessTokenRequestHttpMethod = accessTokenRequestHttpMethod,
     grantType = grantType,
-    additionalAccessTokenRequestParameters = accessTokenRequestParameters,
-    userInfoHttpMethod = userInfoHttpMethod,
-    userInfoUri = userInfoUri,
-    userInfoAttributes = userInfoAttributes
+    userInfoRequestHttpMethod = userInfoRequestHttpMethod,
+    userInfoRequestUri = userInfoRequestUri,
+    userInfoResponseAttributes = userInfoResponseAttributes
 )
 
 internal fun getResourceServerRequest(
