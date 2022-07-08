@@ -12,10 +12,10 @@ internal fun getResourceServer(
     accessTokenRequestParameters: Map<String, String> = mapOf("accesstokenparameter" to "accesstokenparameter"),
     userInfoHttpMethod: HttpMethod = HttpMethod.GET,
     userInfoUri: String = "userinfouri",
-    userInfoAttributes: ResourceServer.UserInfoAttributes = ResourceServer.UserInfoAttributes(
-        id = "id",
-        profileImage = "profile",
-        email = "email"
+    userInfoAttributes: Map<String, String> = mapOf(
+        "id" to "id",
+        "profileImage" to "profile",
+        "email" to "email"
     )
 ) = ResourceServer(
     clientName = clientName,
@@ -66,4 +66,14 @@ internal fun getAccessTokenRequestParameters(
     clientId = clientId,
     clientSecret = clientSecret,
     redirectUri = redirectUri
+)
+
+internal fun getAccessTokenRequest(
+    httpMethod: HttpMethod = HttpMethod.GET,
+    uri: String = "https://accessTokenUri",
+    accessTokenRequestParameters: AccessTokenRequestParameters = getAccessTokenRequestParameters()
+) = AccessTokenRequest(
+    httpMethod = httpMethod,
+    uri = uri,
+    accessTokenRequestParameters = accessTokenRequestParameters
 )
