@@ -18,6 +18,7 @@ internal class AccessTokenRequestParametersTest {
             clientSecret = clientSecret,
             redirectUri = redirectUri
         )
+        val authenticationCode = "authenticationCode"
         val parameters = accessTokenRequestParameters.parameters
         val expectedParameters = LinkedMultiValueMap<String, String>()
                 .apply {
@@ -25,6 +26,7 @@ internal class AccessTokenRequestParametersTest {
                     add("client_id", clientId)
                     add("client_secret", clientSecret)
                     add("redirect_uri", redirectUri)
+                    add("code", authenticationCode)
                 }
         assertThat(parameters).isEqualTo(expectedParameters)
     }

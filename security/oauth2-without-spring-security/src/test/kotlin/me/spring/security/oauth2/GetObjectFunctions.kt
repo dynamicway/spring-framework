@@ -1,8 +1,6 @@
 package me.spring.security.oauth2
 
 import org.springframework.http.HttpMethod
-import org.springframework.util.LinkedMultiValueMap
-import org.springframework.util.MultiValueMap
 
 internal fun getResourceServer(
     clientName: String = "clientname",
@@ -32,22 +30,18 @@ internal fun getResourceServer(
 
 internal fun getResourceServerRequest(
     resourceServerName: String = "google",
-    accessTokenUri: String = "https://accessTokenUri",
-    accessTokenParameters: MultiValueMap<String, String> = LinkedMultiValueMap(),
-    userInfoHttpMethod: HttpMethod = HttpMethod.GET,
-    userInfoUri: String = "userInfoUri",
-    userInfoAttributes: Map<String, String> = mapOf(
+    accessTokenRequest: AccessTokenRequest = getAccessTokenRequest(),
+    userInfoRequest: UserInfoRequest = getUserInfoRequest(),
+    userInfoResponseAttributes: Map<String, String> = mapOf(
         "id" to "id",
         "profileImage" to "profileImage",
         "email" to "email"
-    ),
+    )
 ) = ResourceServerRequest(
     resourceServerName = resourceServerName,
-    accessTokenUri = accessTokenUri,
-    accessTokenParameters = accessTokenParameters,
-    userInfoHttpMethod = userInfoHttpMethod,
-    userInfoUri = userInfoUri,
-    userInfoAttributes = userInfoAttributes,
+    accessTokenRequest = accessTokenRequest,
+    userInfoRequest = userInfoRequest,
+    userInfoResponseAttributes = userInfoResponseAttributes
 )
 
 internal fun getUserInfoRequest(
@@ -62,12 +56,14 @@ internal fun getAccessTokenRequestParameters(
     grantType: String = "grantType",
     clientId: String = "clientId",
     clientSecret: String = "clientSecret",
-    redirectUri: String = "redirectUri"
+    redirectUri: String = "redirectUri",
+    authenticationCode: String = "authenticationCode"
 ) = AccessTokenRequestParameters(
     grantType = grantType,
     clientId = clientId,
     clientSecret = clientSecret,
-    redirectUri = redirectUri
+    redirectUri = redirectUri,
+    authenticationCode = authenticationCode
 )
 
 internal fun getAccessTokenRequest(
@@ -78,4 +74,20 @@ internal fun getAccessTokenRequest(
     httpMethod = httpMethod,
     uri = uri,
     accessTokenRequestParameters = accessTokenRequestParameters
+)
+
+internal fun getUserInfoResponse(
+    userInfoResponse: Map<String, String> = mapOf(
+        "id" to "id",
+        "profileImage" to "profileImage",
+        "email" to "email"
+    )
+) = UserInfoResponse(
+    userInfoAttributesResponse = userInfoResponse
+)
+
+internal fun getAccessTokenResponse(
+    accessToken: String = "accessToken"
+) = AccessTokenResponse(
+    accessToken = accessToken
 )

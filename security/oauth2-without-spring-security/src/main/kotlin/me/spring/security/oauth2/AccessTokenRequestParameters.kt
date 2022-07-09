@@ -6,7 +6,8 @@ data class AccessTokenRequestParameters(
     private val grantType: String,
     private val clientId: String,
     private val clientSecret: String,
-    private val redirectUri: String
+    private val redirectUri: String,
+    private val authenticationCode: String
 ) {
 
     val parameters by lazy {
@@ -15,6 +16,7 @@ data class AccessTokenRequestParameters(
             add("client_id", clientId)
             add("client_secret", clientSecret)
             add("redirect_uri", redirectUri)
+            add("code", authenticationCode)
         }
     }
 

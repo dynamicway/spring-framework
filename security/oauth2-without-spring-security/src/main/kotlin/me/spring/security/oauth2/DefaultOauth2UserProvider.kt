@@ -8,15 +8,14 @@ class DefaultOauth2UserProvider(
 ): Oauth2UserProvider {
 
     override fun getOauth2User(resourceServerRequest: ResourceServerRequest): Oauth2User {
-        val oauth2AccessTokenResponse = resourceServerClient.getAccessToken(resourceServerRequest.getAccessTokenRequestEntity(), resourceServerRequest.getAccessTokenResponseType) ?: throw IllegalStateException()
-        val userInfoAttributes = resourceServerClient.getUserInfo(resourceServerRequest.getUserInfoRequestEntity(oauth2AccessTokenResponse.accessToken), resourceServerRequest.getUserInfoResponseType) ?: throw IllegalStateException()
-        val userAttributes = resourceServerRequest.getUserAttributes(userInfoAttributes)
+        val oauth2AccessTokenResponse = resourceServerClient.getAccessToken(resourceServerRequest.accessTokenRequestEntity) ?: throw IllegalStateException("accessTokenResponse in null")
+        val userInfoResponse = resourceServerClient.getUserInfo(resourceServerRequest.getUserInfoRequestEntity(oauth2AccessTokenResponse.accessToken)) ?: throw IllegalStateException("userInfoResponse is null")
 
         return Oauth2User(
-            id = userAttributes["id"]!!,
-            profileImage = userAttributes["profileImage"],
-            email = userAttributes["email"],
-            resourceServerName = userAttributes["resourceServerName"]!!
+            id = userInfoResponse.getAttribute(resourceServerRequest.userInfoResponseAttributes["id"]) ?: throw IllegalStateException("user info response has not id attribute that matched resource server id attribute"),
+            profileImage = userInfoResponse.getAttribute(resourceServerRequest.userInfoResponseAttributes["profileImage"]),
+            email = userInfoResponse.getAttribute(resourceServerRequest.userInfoResponseAttributes["email"]),
+            resourceServerName = resourceServerRequest.resourceServerName
         )
     }
 

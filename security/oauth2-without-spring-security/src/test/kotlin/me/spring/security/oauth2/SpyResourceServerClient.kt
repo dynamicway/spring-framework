@@ -4,34 +4,19 @@ import org.springframework.http.RequestEntity
 
 class SpyResourceServerClient: ResourceServerClient {
 
-    lateinit var getAccessTokenArgumentsResponseType: Class<*>
     lateinit var getAccessTokenArgumentsEntity: RequestEntity<Void>
-    var getAccessTokenResult: Any? = Oauth2AccessTokenResponse("accessToken")
-
-    lateinit var getUserInfoArgumentsResponseType: Class<*>
+    var getAccessTokenResult: AccessTokenResponse? = getAccessTokenResponse()
     lateinit var getUserInfoArgumentsEntity: RequestEntity<Void>
-    var getUserInfoResult: Any? = mapOf(
-        "id" to "id",
-        "profileImage" to "profileImage",
-        "email" to "email"
-    )
+    var getUserInfoResult: UserInfoResponse? = getUserInfoResponse()
 
-    override fun <T> getAccessToken(
-        accessTokenRequest: RequestEntity<Void>,
-        accessTokenResponseType: Class<T>
-    ): T? {
+    override fun getAccessToken(accessTokenRequest: RequestEntity<Void>): AccessTokenResponse? {
         getAccessTokenArgumentsEntity = accessTokenRequest
-        getAccessTokenArgumentsResponseType = accessTokenResponseType
-        return getAccessTokenResult as T
+        return getAccessTokenResult
     }
 
-    override fun <T> getUserInfo(
-        userInfoRequest: RequestEntity<Void>,
-        userInfoResponseType: Class<T>
-    ): T? {
+    override fun getUserInfo(userInfoRequest: RequestEntity<Void>): UserInfoResponse? {
         getUserInfoArgumentsEntity = userInfoRequest
-        getUserInfoArgumentsResponseType = userInfoResponseType
-        return getUserInfoResult as T
+        return getUserInfoResult
     }
 
 }

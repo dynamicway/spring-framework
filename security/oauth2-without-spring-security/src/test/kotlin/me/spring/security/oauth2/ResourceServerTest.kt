@@ -22,6 +22,7 @@ internal class ResourceServerTest {
             clientSecret = clientSecret,
             clientName = clientName
         )
+        val authenticationCode = "authenticationCode"
         val expectedAccessTokenRequest = AccessTokenRequest(
             httpMethod = accessTokenRequestHttpMethod,
             uri = accessTokenRequestUri,
@@ -29,10 +30,11 @@ internal class ResourceServerTest {
                 grantType = grantType,
                 clientId = clientId,
                 clientSecret = clientSecret,
-                redirectUri = "http://localhost:8080/auth/$clientName"
+                redirectUri = "http://localhost:8080/auth/$clientName",
+                authenticationCode
             )
         )
-        val accessTokenRequest = resourceServer.accessTokenRequest
+        val accessTokenRequest = resourceServer.getAccessTokenRequest(authenticationCode)
 
         assertThat(accessTokenRequest).isEqualTo(expectedAccessTokenRequest)
     }
@@ -49,7 +51,6 @@ internal class ResourceServerTest {
             httpMethod = userInfoRequestHttpMethod,
             uri = userInfoRequestUri
         )
-
         val userInfoRequest = resourceServer.userInfoRequest
 
         assertThat(userInfoRequest).isEqualTo(expectedUserInfoRequest)

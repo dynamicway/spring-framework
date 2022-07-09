@@ -5,7 +5,6 @@ import org.assertj.core.api.Assertions.assertThatCode
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpMethod
 import org.springframework.mock.web.MockHttpServletRequest
-import org.springframework.util.LinkedMultiValueMap
 
 internal class DefaultResourceServerRequestFactoryTest {
 
@@ -14,42 +13,39 @@ internal class DefaultResourceServerRequestFactoryTest {
             clientName = "google",
             clientId = "googleClientId",
             clientSecret = "googleClientSecret",
-            accessTokenUri = "googleAccessTokenUri",
-            accessTokenRequestParameters = mapOf("googleAccessTokenParameter" to "googleAccessTokenParameter"),
-            userInfoHttpMethod = HttpMethod.GET,
-            userInfoUri = "google_userInfoUri",
-            userInfoAttributes = ResourceServer.UserInfoAttributes(
-                id = "googleId",
-                profileImage = "googleProfile",
-                email = "googleEmail"
+            accessTokenRequestUri = "googleAccessTokenUri",
+            userInfoRequestHttpMethod = HttpMethod.GET,
+            userInfoRequestUri = "google_userInfoUri",
+            userInfoResponseAttributes = mapOf(
+                "id" to "googleId",
+                "profileImage" to "googleProfile",
+                "email" to "googleEmail"
             )
         ),
         "naver" to getResourceServer(
             clientName = "naver",
             clientId = "naverClientId",
             clientSecret = "naverClientSecret",
-            accessTokenUri = "naverAccessTokenUri",
-            accessTokenRequestParameters = mapOf("naverAccessTokenParameter" to "naverAccessTokenParameter"),
-            userInfoHttpMethod = HttpMethod.GET,
-            userInfoUri = "naver_userInfoUri",
-            userInfoAttributes = ResourceServer.UserInfoAttributes(
-                id = "naverId",
-                profileImage = "naverProfile",
-                email = "naverEmail"
+            accessTokenRequestUri = "naverAccessTokenUri",
+            userInfoRequestHttpMethod = HttpMethod.GET,
+            userInfoRequestUri = "naver_userInfoUri",
+            userInfoResponseAttributes = mapOf(
+                "id" to "naverId",
+                "profileImage" to "naverProfile",
+                "email" to "naverEmail"
             )
         ),
         "kakao" to getResourceServer(
             clientName = "kakao",
             clientId = "kakaoClientId",
             clientSecret = "kakaoClientSecret",
-            accessTokenUri = "kakaoAccessTokenUri",
-            accessTokenRequestParameters = mapOf("kakaoAccessTokenParameter" to "kakaoAccessTokenParameter"),
-            userInfoHttpMethod = HttpMethod.GET,
-            userInfoUri = "kakao_userInfoUri",
-            userInfoAttributes = ResourceServer.UserInfoAttributes(
-                id = "kakaoId",
-                profileImage = "kakaoProfile",
-                email = "kakaoEmail"
+            accessTokenRequestUri = "kakaoAccessTokenUri",
+            userInfoRequestHttpMethod = HttpMethod.GET,
+            userInfoRequestUri = "kakao_userInfoUri",
+            userInfoResponseAttributes = mapOf(
+                "id" to "kakaoId",
+                "profileImage" to "kakaoProfile",
+                "email" to "kakaoEmail"
             )
         )
     )
@@ -58,25 +54,18 @@ internal class DefaultResourceServerRequestFactoryTest {
     )
 
     @Test
-    fun getOauth2AuthenticationCodeBy_return_oauth2AuthenticationCode_through_authenticationCode_redirected() {
+    fun getOauth2AuthenticationCodeBy_return_oauth2AuthenticationCode_through_ServletRequest() {
         clients.forEach { client ->
             val resourceServer = client.value
             val servletRequest = MockHttpServletRequest("GET", "/auth/${resourceServer.clientName}")
-            val requestedAuthenticationCode = "${resourceServer.clientName}AuthenticationCode"
-            servletRequest.addParameter("code", requestedAuthenticationCode)
+            val authenticationCode = "${resourceServer.clientName}AuthenticationCode"
+            servletRequest.addParameter("code", authenticationCode)
             val resourceServerRequest = defaultOauth2AuthenticationCodeFactory.getResourceServerRequestBy(servletRequest)
-            val accessTokenParameters = LinkedMultiValueMap<String, String>()
-                    .apply {
-                        putAll(resourceServer.accessTokenParameter)
-                        add("code", requestedAuthenticationCode)
-                    }
             val expectedResourceServerRequest = getResourceServerRequest(
                 resourceServerName = resourceServer.clientName,
-                accessTokenUri = resourceServer.accessTokenUri,
-                accessTokenParameters = accessTokenParameters,
-                userInfoHttpMethod = resourceServer.userInfoHttpMethod,
-                userInfoUri = resourceServer.userInfoUri,
-                userInfoAttributes = resourceServer.userInfoAttributes.attributes
+                accessTokenRequest = resourceServer.getAccessTokenRequest(authenticationCode),
+                userInfoRequest = resourceServer.userInfoRequest,
+                userInfoResponseAttributes = resourceServer.userInfoResponseAttributes
             )
 
             assertThat(resourceServerRequest).isEqualTo(expectedResourceServerRequest)

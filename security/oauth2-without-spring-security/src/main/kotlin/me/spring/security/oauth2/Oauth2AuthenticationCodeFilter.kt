@@ -1,12 +1,10 @@
 package me.spring.security.oauth2
 
-import org.springframework.stereotype.Component
 import javax.servlet.Filter
 import javax.servlet.FilterChain
 import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
 
-@Component
 class Oauth2AuthenticationCodeFilter(
     private val resourceServerRequestFactory: ResourceServerRequestFactory,
     private val oauth2UserProvider: Oauth2UserProvider
@@ -17,8 +15,10 @@ class Oauth2AuthenticationCodeFilter(
         response: ServletResponse,
         chain: FilterChain
     ) {
+        println("filter is executed")
         val oauth2AuthenticationCodeBy = resourceServerRequestFactory.getResourceServerRequestBy(request)
-        oauth2UserProvider.getOauth2User(oauth2AuthenticationCodeBy)
+        val oauth2User = oauth2UserProvider.getOauth2User(oauth2AuthenticationCodeBy)
+        println(oauth2User)
     }
 
 }

@@ -18,14 +18,13 @@ internal class AccessTokenRequestTest {
             uri = uri,
             accessTokenRequestParameters = accessTokenRequestParameters
         )
+        val authenticationCode = "authenticationCode"
         val expectedUri = UriComponentsBuilder.fromUriString(uri)
                 .queryParams(accessTokenRequestParameters.parameters)
                 .build()
                 .toUri()
-
         val expectedAccessTokenRequestEntity = RequestEntity.method(httpMethod, expectedUri)
                 .build()
-
         val accessTokenRequestEntity = accessTokenRequest.accessTokenRequestEntity
 
         assertThat(accessTokenRequestEntity).isEqualTo(expectedAccessTokenRequestEntity)

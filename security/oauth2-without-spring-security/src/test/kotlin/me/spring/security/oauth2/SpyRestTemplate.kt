@@ -8,8 +8,8 @@ import java.util.*
 class SpyRestTemplate: RestTemplate() {
 
     val exchangeArgumentsEntity = mutableListOf<RequestEntity<*>>()
-    val exchangeArgumentsResponseType= mutableListOf<Class<*>>()
-    var exchangeResult: ResponseEntity<Any> = ResponseEntity.of(Optional.of(Oauth2AccessTokenResponse("accessToken")))
+    val exchangeArgumentsResponseType = mutableListOf<Class<*>>()
+    var exchangeResult: ResponseEntity<Any> = ResponseEntity.of(Optional.of(AccessTokenResponse("accessToken")))
 
     override fun <T: Any?> exchange(
         entity: RequestEntity<*>,

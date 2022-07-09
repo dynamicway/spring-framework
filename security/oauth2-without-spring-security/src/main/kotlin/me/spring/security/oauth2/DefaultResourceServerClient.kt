@@ -9,13 +9,11 @@ class DefaultResourceServerClient(
     private val restTemplate: RestTemplate = RestTemplate()
 ): ResourceServerClient {
 
-    override fun <T> getAccessToken(
-        accessTokenRequest: RequestEntity<Void>,
-        accessTokenResponseType: Class<T>
-    ) = restTemplate.exchange(accessTokenRequest, accessTokenResponseType).body
+    override fun getAccessToken(
+        accessTokenRequest: RequestEntity<Void>
+    ) = restTemplate.exchange(accessTokenRequest, AccessTokenResponse::class.java).body
 
-    override fun <T> getUserInfo(
-        userInfoRequest: RequestEntity<Void>,
-        userInfoResponseType: Class<T>
-    ) = restTemplate.exchange(userInfoRequest, userInfoResponseType).body
+    override fun getUserInfo(
+        userInfoRequest: RequestEntity<Void>
+    ) = restTemplate.exchange(userInfoRequest, UserInfoResponse::class.java).body
 }

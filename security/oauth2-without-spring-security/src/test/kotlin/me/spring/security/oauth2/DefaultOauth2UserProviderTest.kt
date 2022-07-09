@@ -23,26 +23,26 @@ internal class DefaultOauth2UserProviderTest {
         val resourceServerRequest = getResourceServerRequest()
         defaultOauth2UserProvider.getOauth2User(resourceServerRequest)
 
-        assertThat(spyResourceServerClient.getAccessTokenArgumentsEntity).isEqualTo(resourceServerRequest.getAccessTokenRequestEntity())
-        assertThat(spyResourceServerClient.getAccessTokenArgumentsResponseType).isEqualTo(resourceServerRequest.getAccessTokenResponseType)
+        assertThat(spyResourceServerClient.getAccessTokenArgumentsEntity).isEqualTo(resourceServerRequest.accessTokenRequestEntity)
     }
 
     @Test
     fun getOauth2User_throw_IllegalStateException_when_get_accessToken_returns_null() {
         spyResourceServerClient.getAccessTokenResult = null
 
-        assertThatCode { defaultOauth2UserProvider.getOauth2User(getResourceServerRequest()) }.isInstanceOf(IllegalStateException::class.java)
+        assertThatCode { defaultOauth2UserProvider.getOauth2User(getResourceServerRequest()) }
+                .isInstanceOf(IllegalStateException::class.java)
+                .hasMessage("accessTokenResponse in null")
     }
 
     @Test
     fun getOauth2User_get_userInfo_by_resourceServerRequest() {
         val resourceServerRequest = getResourceServerRequest()
         val accessToken = "accessToken"
-        spyResourceServerClient.getAccessTokenResult = Oauth2AccessTokenResponse(accessToken = accessToken)
+        spyResourceServerClient.getAccessTokenResult = AccessTokenResponse(accessToken = accessToken)
         defaultOauth2UserProvider.getOauth2User(resourceServerRequest)
 
         assertThat(spyResourceServerClient.getUserInfoArgumentsEntity).isEqualTo(resourceServerRequest.getUserInfoRequestEntity(accessToken))
-        assertThat(spyResourceServerClient.getUserInfoArgumentsResponseType).isEqualTo(resourceServerRequest.getUserInfoResponseType)
     }
 
     @Test
@@ -50,29 +50,58 @@ internal class DefaultOauth2UserProviderTest {
         spyResourceServerClient.getUserInfoResult = null
         assertThatCode { defaultOauth2UserProvider.getOauth2User(getResourceServerRequest()) }
                 .isInstanceOf(IllegalStateException::class.java)
+                .hasMessage("userInfoResponse is null")
     }
 
     @Test
     fun getOauth2User_return_Oauth2User_by_resourceServerRequest_with_userInfo() {
-        val resourceServerRequest = getResourceServerRequest()
-        val getUserInfoResult = mapOf(
-            "id" to "1",
-            "profileImage" to "image",
-            "email" to "email@email.com"
+        val userInfo = mapOf(
+            "id" to "resourceServerId",
+            "profileImage" to "resourceServerProfileImage",
+            "email" to "resourceServerEmail"
         )
-
-        spyResourceServerClient.getUserInfoResult = getUserInfoResult
-        val userAttributes = resourceServerRequest.getUserAttributes(getUserInfoResult)
+        spyResourceServerClient.getUserInfoResult = getUserInfoResponse(
+            userInfo
+        )
+        val resourceServerRequest = getResourceServerRequest(
+            userInfoResponseAttributes = mapOf(
+                "id" to "id",
+                "profileImage" to "profileImage",
+                "email" to "email"
+            )
+        )
         val expectedOauth2User = Oauth2User(
-            id = userAttributes["id"]!!,
-            profileImage = userAttributes["profileImage"],
-            email = userAttributes["email"],
-            resourceServerName = userAttributes["resourceServerName"]!!
+            id = userInfo[resourceServerRequest.userInfoResponseAttributes["id"]]!!,
+            profileImage = userInfo[resourceServerRequest.userInfoResponseAttributes["profileImage"]],
+            email = userInfo[resourceServerRequest.userInfoResponseAttributes["email"]],
+            resourceServerName = resourceServerRequest.resourceServerName
         )
-
         val oauth2User = defaultOauth2UserProvider.getOauth2User(resourceServerRequest)
 
         assertThat(oauth2User).isEqualTo(expectedOauth2User)
+    }
+
+    @Test
+    fun getOauth2User_throws_IllegalStateException_when_userInfoResponse_id_is_null() {
+        val userInfo = mapOf(
+            "profileImage" to "resourceServerProfileImage",
+            "email" to "resourceServerEmail"
+        )
+        spyResourceServerClient.getUserInfoResult = getUserInfoResponse(
+            userInfo
+        )
+        val resourceServerRequest = getResourceServerRequest(
+            userInfoResponseAttributes = mapOf(
+                "id" to "id",
+                "profileImage" to "profileImage",
+                "email" to "email"
+            )
+        )
+
+        assertThatCode { defaultOauth2UserProvider.getOauth2User(resourceServerRequest) }
+                .isInstanceOf(IllegalStateException::class.java)
+                .hasMessage("user info response has not id attribute that matched resource server id attribute")
+
     }
 
 }
