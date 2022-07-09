@@ -77,7 +77,7 @@ internal fun getAccessTokenRequest(
 )
 
 internal fun getUserInfoResponse(
-    userInfoResponse: Map<String, String> = mapOf(
+    userInfoResponse: Map<String, Any> = mapOf(
         "id" to "id",
         "profileImage" to "profileImage",
         "email" to "email"

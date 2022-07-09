@@ -16,7 +16,7 @@ class UserInfoResponseDeserializer(vc: Class<*>?): StdDeserializer<UserInfoRespo
     ): UserInfoResponse {
         val jsonNode = p.codec.readTree<JsonNode>(p)
         val json = jsonNode.toString()
-        val flattenAttributes = JsonFlattener.flattenAsMap(json) as Map<String, String>
+        val flattenAttributes = JsonFlattener.flattenAsMap(json) as Map<String, Any>
         return UserInfoResponse(flattenAttributes)
     }
 

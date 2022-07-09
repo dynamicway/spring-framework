@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 
 @JsonDeserialize(using = UserInfoResponseDeserializer::class)
 class UserInfoResponse(
-    private val userInfoAttributesResponse: Map<String, String>
+    private val userInfoAttributesResponse: Map<String, Any>
 ) {
 
-    fun getAttribute(attribute: String?) = userInfoAttributesResponse[attribute]
+    fun getAttribute(attribute: String?) = userInfoAttributesResponse[attribute]?.toString()
 
 }
