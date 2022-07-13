@@ -1,3 +1,0 @@
-rootProject.name = "security"
-
-include 'oauth2-without-spring-security'
