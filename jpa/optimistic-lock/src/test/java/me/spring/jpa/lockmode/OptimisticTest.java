@@ -66,4 +66,14 @@ public class OptimisticTest {
         assertThat(optimistic.version).isEqualTo(1);
     }
 
+    @Test
+    void not_change_the_version_if_just_only_select() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        Optimistic optimistic = entityManager.find(Optimistic.class, 1L);
+        entityManager.flush();
+        entityManager.close();
+        assertThat(optimistic.version).isEqualTo(0);
+    }
+
 }
