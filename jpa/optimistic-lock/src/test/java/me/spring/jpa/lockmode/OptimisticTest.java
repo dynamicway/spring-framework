@@ -1,19 +1,14 @@
 package me.spring.jpa.lockmode;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.RollbackException;
-import javax.persistence.Version;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -22,52 +17,38 @@ import java.util.concurrent.Executors;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
-@Rollback
 public class OptimisticTest {
 
     @Autowired
     private EntityManagerFactory entityManagerFactory;
+    private final long id = 1L;
 
     @BeforeEach
-    @Rollback(value = false)
     void setUp() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        entityManager.persist(new Optimistic("optimistic"));
+        entityManager.persist(new Optimistic(id, "optimistic"));
         entityManager.getTransaction().commit();
         entityManager.close();
     }
 
-    @Entity
-    public static class Optimistic {
-
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private final Long id;
-
-        private String name;
-
-        @Version
-        private long version;
-
-        protected Optimistic(String name) {
-            this.id = null;
-            this.name = name;
-        }
-
-        public Optimistic() {
-            this.id = null;
-        }
+    @AfterEach
+    void truncate() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        entityManager.createNativeQuery("truncate table optimistic").executeUpdate();
+        entityManager.getTransaction().commit();
+        entityManager.close();
     }
 
     @Test
     void change_the_version_if_entity_updated() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        Optimistic optimistic = entityManager.find(Optimistic.class, 1L);
+        Optimistic optimistic = entityManager.find(Optimistic.class, id);
         long versionBeforeUpdate = optimistic.version;
         optimistic.name = "changeName";
-        entityManager.flush();
+        entityManager.getTransaction().commit();
         entityManager.close();
         assertThat(optimistic.version).isNotEqualTo(versionBeforeUpdate);
     }
@@ -76,7 +57,7 @@ public class OptimisticTest {
     void not_change_the_version_if_just_only_select() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        Optimistic optimistic = entityManager.find(Optimistic.class, 1L);
+        Optimistic optimistic = entityManager.find(Optimistic.class, id);
         long version = optimistic.version;
         entityManager.flush();
         entityManager.close();
@@ -91,7 +72,7 @@ public class OptimisticTest {
         Runnable runnable = () -> {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            Optimistic optimistic = entityManager.find(Optimistic.class, 1L);
+            Optimistic optimistic = entityManager.find(Optimistic.class, id);
             optimistic.name = Thread.currentThread().getName();
             sleep(100);
             try {
