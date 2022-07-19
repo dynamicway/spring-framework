@@ -1,0 +1,7 @@
+package me.spring.web.inflearnadvancedlevel.proxy.app.trace
+
+class TraceStatus(
+    val traceId: TraceId,
+    val startTimeMs: Long,
+    val message: String
+)
