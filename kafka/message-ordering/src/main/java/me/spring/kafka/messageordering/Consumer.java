@@ -12,7 +12,7 @@ import java.util.concurrent.CountDownLatch;
 public class Consumer {
     public final List<Integer> messages = new ArrayList<>();
 
-    public final CountDownLatch countDownLatch = new CountDownLatch(100);
+    public final CountDownLatch countDownLatch = new CountDownLatch(1000);
 
     @KafkaListener(topics = "message-ordering", concurrency = "10")
     public void consume(ConsumerRecord<String, String> consumerRecord) {

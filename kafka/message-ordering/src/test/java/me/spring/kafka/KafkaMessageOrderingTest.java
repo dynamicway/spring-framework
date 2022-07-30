@@ -23,17 +23,34 @@ public class KafkaMessageOrderingTest {
 
     @Test
     void not_ordering() throws InterruptedException {
-        IntStream.range(0, 100).forEach(i -> kafkaTemplate.send("message-ordering", String.valueOf(i)));
+        IntStream.range(0, 1000).forEach(i -> kafkaTemplate.send("message-ordering", String.valueOf(i)));
         consumer.countDownLatch.await();
         boolean notOrdered = false;
-        for (int i = 0; i < 99; i++) {
+        for (int i = 0; i < 999; i++) {
             if (consumer.messages.get(i) + 1 != consumer.messages.get(i + 1)) {
                 notOrdered = true;
                 break;
             }
         }
 
-        assert consumer.messages.size() == 100;
+        assert consumer.countDownLatch.getCount() == 0;
         assert notOrdered;
     }
+
+    @Test
+    void ordering() throws InterruptedException {
+        IntStream.range(0, 1000).forEach(i -> kafkaTemplate.send("message-ordering", "message-key", String.valueOf(i)));
+        consumer.countDownLatch.await();
+        boolean notOrdered = false;
+        for (int i = 0; i < 999; i++) {
+            if (consumer.messages.get(i) + 1 != consumer.messages.get(i + 1)) {
+                notOrdered = true;
+                break;
+            }
+        }
+
+        assert consumer.countDownLatch.getCount() == 0;
+        assert !notOrdered;
+    }
+
 }
