@@ -11,7 +11,6 @@ import javax.validation.Validator;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
 
 class BeanValidationTest {
 
@@ -38,7 +37,7 @@ class BeanValidationTest {
     @NullSource
     void product_quantity_ranges_from_0_to_100(Integer invalidQuantity) {
         Product product = new Product(
-                "productName",
+                getValidName(),
                 invalidQuantity,
                 getValidPrice()
         );
@@ -48,6 +47,27 @@ class BeanValidationTest {
         assertThat(validationResult).hasSize(1);
         ConstraintViolation<Product> productConstraintViolation = validationResult.stream().findFirst().get();
         assertThat(productConstraintViolation.getPropertyPath().toString()).hasToString("quantity");
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = -1)
+    @NullSource
+    void product_price_is_not_negative(Long invalidPrice) {
+        Product product = new Product(
+                getValidName(),
+                getValidQuantity(),
+                invalidPrice
+        );
+
+        Set<ConstraintViolation<Product>> validationResult = validator.validate(product);
+
+        assertThat(validationResult).hasSize(1);
+        ConstraintViolation<Product> productConstraintViolation = validationResult.stream().findFirst().get();
+        assertThat(productConstraintViolation.getPropertyPath().toString()).hasToString("price");
+    }
+
+    private String getValidName() {
+        return "productName";
     }
 
     private long getValidPrice() {
