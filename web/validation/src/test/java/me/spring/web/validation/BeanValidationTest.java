@@ -1,5 +1,6 @@
 package me.spring.web.validation;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
@@ -64,6 +65,19 @@ class BeanValidationTest {
         assertThat(validationResult).hasSize(1);
         ConstraintViolation<Product> productConstraintViolation = validationResult.stream().findFirst().get();
         assertThat(productConstraintViolation.getPropertyPath().toString()).hasToString("price");
+    }
+
+    @Test
+    void a_valid_product_is_created() {
+        Product product = new Product(
+                getValidName(),
+                getValidQuantity(),
+                getValidPrice()
+        );
+
+        Set<ConstraintViolation<Product>> validationResult = validator.validate(product);
+
+        assertThat(validationResult).isEmpty();
     }
 
     private String getValidName() {
