@@ -29,9 +29,9 @@ class BeanValidationTest {
 
         Set<ConstraintViolation<Product>> validationResult = validator.validate(product);
 
-        assertThat(validationResult).hasSize(1);
-        ConstraintViolation<Product> productConstraintViolation = validationResult.stream().findFirst().get();
-        assertThat(productConstraintViolation.getPropertyPath().toString()).hasToString("name");
+        assertThat(validationResult)
+                .singleElement()
+                .satisfies(productConstraintViolation -> assertThat(productConstraintViolation.getPropertyPath()).hasToString("name"));
     }
 
     @ParameterizedTest
@@ -46,9 +46,9 @@ class BeanValidationTest {
 
         Set<ConstraintViolation<Product>> validationResult = validator.validate(product);
 
-        assertThat(validationResult).hasSize(1);
-        ConstraintViolation<Product> productConstraintViolation = validationResult.stream().findFirst().get();
-        assertThat(productConstraintViolation.getPropertyPath().toString()).hasToString("quantity");
+        assertThat(validationResult)
+                .singleElement()
+                .satisfies(productConstraintViolation -> assertThat(productConstraintViolation.getPropertyPath()).hasToString("quantity"));
     }
 
     @ParameterizedTest
@@ -63,9 +63,9 @@ class BeanValidationTest {
 
         Set<ConstraintViolation<Product>> validationResult = validator.validate(product);
 
-        assertThat(validationResult).hasSize(1);
-        ConstraintViolation<Product> productConstraintViolation = validationResult.stream().findFirst().get();
-        assertThat(productConstraintViolation.getPropertyPath().toString()).hasToString("price");
+        assertThat(validationResult)
+                .singleElement()
+                .satisfies(productConstraintViolation -> assertThat(productConstraintViolation.getPropertyPath()).hasToString("price"));
     }
 
     @Test
@@ -89,9 +89,11 @@ class BeanValidationTest {
         Set<ConstraintViolation<Jesus>> validationResult = validator.validate(jesus);
 
         assertThat(validationResult)
-                .hasSize(1)
-                .anyMatch(jesusConstraintViolation -> jesusConstraintViolation.getPropertyPath().toString().equals("birth"))
-                .anyMatch(jesusConstraintViolation -> jesusConstraintViolation.getMessage().equals("is not Christmas"));
+                .singleElement()
+                .satisfies(jesusConstraintViolation -> {
+                    assertThat(jesusConstraintViolation.getPropertyPath()).hasToString("birth");
+                    assertThat(jesusConstraintViolation.getMessage()).isEqualTo("is not Christmas");
+                });
     }
 
     private String getValidName() {
