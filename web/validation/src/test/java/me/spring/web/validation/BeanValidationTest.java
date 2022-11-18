@@ -9,6 +9,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import java.time.LocalDate;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -78,6 +79,19 @@ class BeanValidationTest {
         Set<ConstraintViolation<Product>> validationResult = validator.validate(product);
 
         assertThat(validationResult).isEmpty();
+    }
+
+    @Test
+    void is_not_Jesus_that_birth_is_not_Christmas() {
+        LocalDate givenBirth = LocalDate.of(2022, 1, 1);
+        Jesus jesus = new Jesus(givenBirth);
+
+        Set<ConstraintViolation<Jesus>> validationResult = validator.validate(jesus);
+
+        assertThat(validationResult)
+                .hasSize(1)
+                .anyMatch(jesusConstraintViolation -> jesusConstraintViolation.getPropertyPath().toString().equals("birth"))
+                .anyMatch(jesusConstraintViolation -> jesusConstraintViolation.getMessage().equals("is not Christmas"));
     }
 
     private String getValidName() {
