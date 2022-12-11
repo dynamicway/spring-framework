@@ -33,4 +33,16 @@ class UserApiTest {
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 
+    @Test
+    void validate_by_Service_hierarchy() {
+        RestAssured
+                .given()
+                .body("{}")
+                .contentType(ContentType.JSON)
+                .when()
+                .post("/by-service-hierarchy")
+                .then()
+                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+    }
+
 }
