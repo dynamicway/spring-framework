@@ -21,8 +21,16 @@ class UserApiTest {
                 .when()
                 .post("/by-Valid-annotation-on-controller-method")
                 .then()
-                .log().all()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void validate_query_parameters() {
+        RestAssured
+                .when()
+                .get("/age-must-not-be-null")
+                .then()
+                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 
 }
