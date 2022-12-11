@@ -13,6 +13,13 @@ import javax.validation.constraints.NotNull;
 @Validated
 public class UserApi {
 
+    private final UserService userService;
+
+    public UserApi(UserService userService) {
+        this.userService = userService;
+    }
+
+
     @PostMapping("/by-Valid-annotation-on-controller-method")
     public void byValidAnnotationOnControllerMethod(@Valid @RequestBody User user) {
 
@@ -21,6 +28,11 @@ public class UserApi {
     @GetMapping("/age-must-not-be-null")
     public void ageMustNotBeNull(@NotNull Integer age) {
 
+    }
+
+    @PostMapping("/by-service-hierarchy")
+    public void byServiceHierarchy(@RequestBody User user) {
+        userService.validate(user);
     }
 
 
