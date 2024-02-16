@@ -10,7 +10,7 @@ import javax.persistence.Table;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 class Order {
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -21,4 +21,9 @@ class Order {
     void increaseQuantity() {
         this.quantity++;
     }
+
+    long getQuantity() {
+        return quantity;
+    }
+
 }
