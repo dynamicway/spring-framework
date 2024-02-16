@@ -19,7 +19,7 @@ class OrderService {
 
     void increaseOrderQuantityInParallelWithoutTransaction(int quantity) {
         ExecutorService executorService = Executors.newFixedThreadPool(100);
-        CountDownLatch countDownLatch = new CountDownLatch(100);
+        CountDownLatch countDownLatch = new CountDownLatch(quantity);
 
         for (int i = 0; i < quantity; i++) {
             executorService.submit(() -> {
