@@ -11,7 +11,9 @@ import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@SpringBootTest(properties = {
+        "spring.cache.type=caffeine"
+})
 class OrderServiceTest {
 
     @Autowired
