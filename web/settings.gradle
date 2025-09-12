@@ -1,3 +1,3 @@
 rootProject.name = "web"
 
-include("oop-and-pp", "inflearn-advanced-level", "dynamic-proxy", "web-mvc", "validation", "transaction")
+include("oop-and-pp", "inflearn-advanced-level", "dynamic-proxy", "web-mvc", "validation", "transaction", "cache")
