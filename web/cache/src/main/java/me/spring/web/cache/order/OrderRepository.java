@@ -9,12 +9,12 @@ class OrderRepository {
     public final AtomicLong atomicLong = new AtomicLong(0);
 
     long getOrderAmount(long orderNumber) {
-        atomicLong.incrementAndGet();
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        atomicLong.incrementAndGet();
         return orderNumber;
     }
 
