@@ -16,4 +16,8 @@ class OrderService {
         return repository.getOrderAmount(orderNumber);
     }
 
+    @Cacheable(value = "prevent_cache_stampede", sync = true)
+    public long getOrderAmountByPreventCacheStampede(long orderNumber) {
+        return repository.getOrderAmount(orderNumber);
+    }
 }
