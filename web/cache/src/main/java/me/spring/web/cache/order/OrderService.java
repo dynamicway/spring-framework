@@ -11,7 +11,7 @@ class OrderService {
         this.repository = repository;
     }
 
-    @Cacheable("orderNumber")
+    @Cacheable(value = "orderNumber")
     public long getOrderAmount(long orderNumber) {
         return repository.getOrderAmount(orderNumber);
     }

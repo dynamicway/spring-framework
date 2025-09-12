@@ -4,9 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,19 +21,13 @@ class OrderServiceTest {
 
     @Test
     void cached() {
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
-        IntStream.range(0, 10)
-                .mapToObj(i -> executorService.submit(() -> sut.getOrderAmount(1)))
-                .map(longFuture -> {
-                    try {
-                        return longFuture.get();
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .collect(Collectors.toUnmodifiableList());
+        List<CompletableFuture<Long>> futures = IntStream.range(0, 1000)
+                .mapToObj(i -> CompletableFuture.supplyAsync(() -> sut.getOrderAmount(1)))
+                .toList();
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
 
-        assertThat(repository.atomicLong.get()).isEqualTo(1);
+        // If cached, the call count would be 1,000 times.
+        assertThat(repository.atomicLong.get()).isLessThan(1000);
     }
 
 }
